@@ -1,0 +1,6 @@
+{
+  "name": "VoltAcc Retail POS",
+  "description": "Enterprise-grade retail Point of Sale, live barcode checkout, real-time inventory tracking, sales history auditing, and cash drawer settlement.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
