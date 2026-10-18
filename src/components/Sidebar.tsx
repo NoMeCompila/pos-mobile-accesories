@@ -89,7 +89,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <nav className="flex flex-col gap-1 px-3 mt-4">
             {navItems.map((item) => {
               const Icon = item.icon;
-              const isActive = currentTab === item.id;
+              const isActive = currentTab === item.id || (item.id === 'home' && currentTab === 'seller/home');
               return (
                 <button
                   key={item.id}

@@ -19,6 +19,8 @@ import { CashDrawerSettlementView } from './components/CashDrawerSettlementView'
 import { HomeDashboardView } from './components/HomeDashboardView';
 import { ReceiptModal } from './components/ReceiptModal';
 import { ShortcutsModal } from './components/ShortcutsModal';
+import { LoginView } from './components/LoginView';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { useProducts, useCart } from './services/posStore';
 
 const queryClient = new QueryClient({
@@ -30,10 +32,12 @@ const queryClient = new QueryClient({
 });
 
 function POSApp() {
+  const { isAuthenticated, isLoading } = useAuth();
+
   const [currentTab, setCurrentTab] = useState<NavigationTab>(() => {
     const hash = window.location.hash.replace('#', '') as NavigationTab;
-    const valid: NavigationTab[] = ['home', 'pos', 'catalog', 'drawer', 'history'];
-    return valid.includes(hash) ? hash : 'pos';
+    const valid: NavigationTab[] = ['home', 'pos', 'catalog', 'drawer', 'history', 'login', 'seller/home'];
+    return valid.includes(hash) ? hash : 'seller/home';
   });
 
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
@@ -65,18 +69,35 @@ function POSApp() {
     localStorage.setItem('voltacc_dark_mode', JSON.stringify(darkMode));
   }, [darkMode]);
 
-  // Synced URL Hash router
+  // Session navigation guard & URL Hash router
   useEffect(() => {
+    if (isLoading) return;
+
     const onHashChange = () => {
-      const hash = window.location.hash.replace('#', '') as NavigationTab;
-      const valid: NavigationTab[] = ['home', 'pos', 'catalog', 'drawer', 'history'];
-      if (valid.includes(hash)) {
-        setCurrentTab(hash);
+      const rawHash = window.location.hash.replace('#', '');
+      const valid: NavigationTab[] = ['home', 'pos', 'catalog', 'drawer', 'history', 'login', 'seller/home'];
+
+      if (!isAuthenticated) {
+        if (rawHash !== 'login') {
+          window.location.hash = 'login';
+        }
+        setCurrentTab('login');
+        return;
+      }
+
+      // Authenticated session handling
+      if (rawHash === 'login' || !rawHash || rawHash === '/') {
+        window.location.hash = 'seller/home';
+        setCurrentTab('seller/home');
+      } else if (valid.includes(rawHash as NavigationTab)) {
+        setCurrentTab(rawHash as NavigationTab);
       }
     };
+
+    onHashChange();
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
-  }, []);
+  }, [isAuthenticated, isLoading]);
 
   const handleNavigate = (tab: NavigationTab) => {
     setCurrentTab(tab);
@@ -122,6 +143,38 @@ function POSApp() {
       p.sku.toLowerCase().includes(priceCheckerQuery.toLowerCase())
   );
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center p-4">
+        <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-700 to-blue-500 text-white flex items-center justify-center shadow-lg shadow-blue-600/30 animate-pulse mb-3">
+          <svg
+            className="w-7 h-7"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <rect width="20" height="12" x="2" y="8" rx="2" />
+            <path d="M4 8V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2" />
+            <path d="M6 12h12" />
+            <circle cx="8" cy="15" r="1" />
+            <circle cx="12" cy="15" r="1" />
+            <circle cx="16" cy="15" r="1" />
+          </svg>
+        </div>
+        <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+          Iniciando Retail POS...
+        </p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated || currentTab === 'login') {
+    return <LoginView onLoginSuccess={() => handleNavigate('seller/home')} />;
+  }
+
   return (
     <div className="min-h-screen bg-[#faf8ff] dark:bg-[#0f172a] text-[#131b2e] dark:text-[#f8fafc] flex flex-col font-body transition-colors duration-200">
       {/* Sidebar Navigation */}
@@ -148,7 +201,9 @@ function POSApp() {
 
         {/* Dynamic Route Canvas */}
         <main className="flex-1 pt-16 px-4 sm:px-6 py-4 max-w-[1600px] w-full mx-auto">
-          {currentTab === 'home' && <HomeDashboardView onNavigate={handleNavigate} />}
+          {(currentTab === 'home' || currentTab === 'seller/home') && (
+            <HomeDashboardView onNavigate={handleNavigate} />
+          )}
 
           {currentTab === 'pos' && (
             <POSTerminalView onOpenReceipt={(ticket) => setActiveReceiptTicket(ticket)} />
@@ -178,7 +233,7 @@ function POSApp() {
             { id: 'history' as NavigationTab, label: 'Historial', icon: Receipt },
           ].map((tab) => {
             const Icon = tab.icon;
-            const isActive = currentTab === tab.id;
+            const isActive = currentTab === tab.id || (tab.id === 'home' && currentTab === 'seller/home');
             return (
               <button
                 key={tab.id}
@@ -304,7 +359,9 @@ function POSApp() {
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <POSApp />
+      <AuthProvider>
+        <POSApp />
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

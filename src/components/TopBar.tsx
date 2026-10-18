@@ -10,8 +10,10 @@ import {
   Moon,
   Sun,
   Zap,
+  LogOut,
 } from 'lucide-react';
 import { useCashShift } from '../services/posStore';
+import { useAuth } from '../context/AuthContext';
 
 interface TopBarProps {
   onToggleSidebar: () => void;
@@ -31,6 +33,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   onToggleDarkMode,
 }) => {
   const { shift } = useCashShift();
+  const { user, logout } = useAuth();
 
   return (
     <header className="fixed top-0 left-0 lg:left-72 right-0 h-16 bg-[#faf8ff]/90 dark:bg-[#131b2e]/90 backdrop-blur-xl border-b border-[#dae2fd]/60 dark:border-[#283044] shadow-xs z-40 flex items-center justify-between px-4 sm:px-6 transition-all duration-300">
@@ -127,19 +130,30 @@ export const TopBar: React.FC<TopBarProps> = ({
 
         <div className="h-5 w-px bg-[#dae2fd] dark:bg-slate-700" />
 
-        {/* Cashier Badge */}
+        {/* Operator Profile & Logout */}
         <div className="flex items-center gap-2 pl-1">
           <div className="hidden sm:flex flex-col text-right">
             <span className="text-xs font-semibold text-[#131b2e] dark:text-slate-200 leading-tight">
-              {shift.operator}
+              {user?.displayName || shift.operator}
             </span>
             <span className="font-mono-num text-[11px] text-[#3f4850] dark:text-slate-400 leading-tight">
-              Cashier
+              {user?.role === 'seller' ? 'Vendedor' : 'Operador'}
             </span>
           </div>
           <div className="w-8 h-8 rounded-full bg-[#006194] dark:bg-[#007bb9] flex items-center justify-center text-white shadow-xs">
             <User className="w-4 h-4 text-white" />
           </div>
+          <button
+            onClick={async () => {
+              await logout();
+              window.location.hash = 'login';
+            }}
+            className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors ml-0.5"
+            title="Cerrar sesión"
+            aria-label="Cerrar sesión"
+          >
+            <LogOut className="w-4 h-4" />
+          </button>
         </div>
       </div>
     </header>
