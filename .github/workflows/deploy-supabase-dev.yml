@@ -1,6 +1,7 @@
 name: Deploy Migrations to Supabase DEV
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - develop
@@ -25,4 +26,3 @@ jobs:
         run: |
           supabase link --project-ref ${{ secrets.SUPABASE_DEV_PROJECT_REF }} --password ${{ secrets.SUPABASE_DEV_DB_PASSWORD }}
           supabase db push --password ${{ secrets.SUPABASE_DEV_DB_PASSWORD }}
-

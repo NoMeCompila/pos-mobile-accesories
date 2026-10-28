@@ -1,6 +1,7 @@
 name: Deploy Migrations to Supabase PROD
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -25,4 +26,3 @@ jobs:
         run: |
           supabase link --project-ref ${{ secrets.SUPABASE_PROD_PROJECT_REF }} --password ${{ secrets.SUPABASE_PROD_DB_PASSWORD }}
           supabase db push --password ${{ secrets.SUPABASE_PROD_DB_PASSWORD }}
-
