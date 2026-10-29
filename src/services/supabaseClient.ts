@@ -16,3 +16,9 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     detectSessionInUrl: true,
   },
 });
+
+// En desarrollo local, exponemos supabase en window para pruebas rápidas desde la consola
+if (import.meta.env.DEV) {
+  (window as any).supabase = supabase;
+}
+
