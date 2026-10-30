@@ -1,32 +1,49 @@
 schema: spec-driven
 
-# Project context (optional)
-# Add only constraints that should guide OpenSpec artifacts and workflows.
-# Include constraints an agent cannot infer by reading the code.
-# Keep general project documentation and discoverable codebase facts out.
-# Example:
-#   context: |
-#     Designs and tasks must cover Windows, macOS, and Linux
-#     Write all artifacts in Spanish
+# Project context
+# Constraints that guide OpenSpec artifacts and workflows.
+context: |
+  Project: POS (Point of Sale) system specialized for retail sales of mobile phone accessories and cellular device repair workshop management.
+  Architecture & Stack:
+    - Frontend: React 19, TypeScript, Vite, Tailwind CSS v4, Motion, Lucide React, and TanStack Query v5. Deployed on Vercel.
+    - Backend: Supabase (PostgreSQL 17) with Row Level Security (RLS), stored procedures, triggers, and SQL migrations.
+    - Version Control & CI/CD: GitHub repository (NoMeCompila/pos-mobile-accesories). Dual environment setup: 'develop' branch connected to Supabase Dev and Vercel Preview; 'main' branch connected to Supabase Prod and Vercel Production.
+  Engineering Principles:
+    - Apply Clean Architecture and Clean Code principles (separation of concerns: UI components -> React Query hooks -> Supabase client services).
+    - Avoid over-engineering: keep designs simple, pragmatic, and directly maintainable for a 2-developer team. No premature abstractions or redundant wrapper layers when a direct service/hook is sufficient.
+    - STRICT TESTING CONSTRAINT: Tasks must NEVER include automated tests (no Jest, Vitest, Cypress, Playwright, or automated test scripts). All testing, verification, and QA are conducted manually by the developer in the browser and POS hardware environment.
+  Language Domain:
+    - Technical OpenSpec planning artifacts (proposals, designs, specs, tasks) are written in English.
+    - User-facing UI copy, POS terminology, and cashier/technician workflows are in Spanish (es-AR).
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always state what is out of scope
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+# Per-artifact rules
+rules:
+  proposal:
+    - "Keep proposals concise, structured, and under 500 words."
+    - "Always define clear 'In Scope' and 'Out of Scope' boundaries."
+    - "Explicitly state whether the change impacts the database schema (Supabase migrations/RLS) or frontend UI views."
+  design:
+    - "Follow Clean Architecture: separate presentation (components), business logic (custom hooks/stores), and data access (Supabase services)."
+    - "Avoid over-engineering: prioritize standard React 19 patterns and TanStack Query over custom state machines or complex abstraction layers unless strictly necessary."
+    - "Ensure data models respect Supabase Row Level Security (RLS) policies and dual-environment (Dev/Prod) separation."
+  specs:
+    - "Frame requirements around practical POS retail and repair shop user journeys (cashier checkout, repair intake, ticket issuance, cash drawer shifts)."
+    - "Define Gherkin Given/When/Then scenarios structured so they can be easily executed and verified manually in the UI."
+  tasks:
+    - "STRICT: Never include automated testing tasks (no unit, integration, or e2e test authoring)."
+    - "Every task must include concise manual verification steps for the developer (e.g. check UI behavior, inspect Network tab, verify Supabase row updates)."
+    - "Break implementation into small, incremental tasks of maximum 1 to 2 hours of effort."
+    - "Organize tasks logically: 1) Database schema/types -> 2) Services/API hooks -> 3) UI views/components -> 4) Manual verification."
 
-# Per-operation guidance (optional)
-# Add advisory guidance for how apply and archive work should be conducted.
-# This is separate from artifact rules above.
-# Example:
-#   operations:
-#     apply:
-#       guidance:
-#         - Keep test summaries concise
-#     archive:
-#       guidance:
-#         - Summarize the archive outcome before finishing
+# Per-operation guidance
+operations:
+  apply:
+    guidance:
+      - "Adhere to Clean Code: meaningful naming, single responsibility, early returns, strict TypeScript types, and zero console logs in production code."
+      - "Ensure all code compiles cleanly with 'npm run lint' (tsc --noEmit) and 'npm run build' before marking tasks complete."
+      - "Implement and test against the Supabase Development environment using .env.local."
+      - "Provide the developer with clear, step-by-step manual testing instructions to validate the feature directly in the browser."
+  archive:
+    guidance:
+      - "Summarize changes applied across database schemas, Supabase services, and UI components."
+      - "Highlight any pending database migrations that need to be pushed ('npx supabase db push') or environment variables needed in Vercel."
