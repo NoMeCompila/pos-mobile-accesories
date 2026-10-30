@@ -13,6 +13,14 @@ const DEFAULT_SELLER_PROFILE: UserProfile = {
   terminalId: 'KPOS-REG-04',
 };
 
+const DEFAULT_ADMIN_PROFILE: UserProfile = {
+  id: 'usr-admin-root',
+  username: 'admin',
+  displayName: 'Admin Root Sistema',
+  role: 'admin',
+  terminalId: 'TERM-MAIN-04',
+};
+
 export class MockAuthService implements IAuthService {
   async login(credentials: LoginCredentials): Promise<AuthSession> {
     const { identifier, passKey, rememberDevice } = credentials;
@@ -25,6 +33,19 @@ export class MockAuthService implements IAuthService {
 
     if (!cleanUser || !cleanPass) {
       throw new Error('El usuario o ID y la contraseña operativa son requeridos');
+    }
+
+    // Default admin credentials check: admin / 123
+    if (cleanUser === 'admin' && cleanPass === '123') {
+      const session: AuthSession = {
+        user: DEFAULT_ADMIN_PROFILE,
+        token: `mock-pos-jwt-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
+        expiresAt: Date.now() + 12 * 60 * 60 * 1000, // 12 hours
+        rememberDevice,
+      };
+
+      this.saveSession(session, rememberDevice);
+      return session;
     }
 
     // Default seller credentials check: vendedor / 123

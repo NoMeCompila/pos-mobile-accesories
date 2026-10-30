@@ -289,6 +289,35 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
               <span>{isLoading ? 'Verificando...' : 'Entrar al Sistema'}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
+
+            {/* Quick Demo Credentials Switcher */}
+            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-500">
+              <span className="font-medium">Accesos demo:</span>
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIdentifier('admin');
+                    setPassKey('123');
+                    setFieldErrors({});
+                  }}
+                  className="px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-950/50 hover:bg-blue-100 text-blue-700 dark:text-blue-300 font-semibold transition-colors cursor-pointer"
+                >
+                  Admin (admin / 123)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIdentifier('vendedor');
+                    setPassKey('123');
+                    setFieldErrors({});
+                  }}
+                  className="px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 font-semibold transition-colors cursor-pointer"
+                >
+                  Vendedor (vendedor / 123)
+                </button>
+              </div>
+            </div>
           </form>
         </div>
       </div>

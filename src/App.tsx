@@ -20,6 +20,7 @@ import { HomeDashboardView } from './components/HomeDashboardView';
 import { ReceiptModal } from './components/ReceiptModal';
 import { ShortcutsModal } from './components/ShortcutsModal';
 import { LoginView } from './components/LoginView';
+import { AdminUserManagementView } from './components/AdminUserManagementView';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { useProducts, useCart } from './services/posStore';
 
@@ -31,13 +32,16 @@ const queryClient = new QueryClient({
   },
 });
 
+const ADMIN_TABS: NavigationTab[] = ['admin/users'];
+const SELLER_TABS: NavigationTab[] = ['home', 'pos', 'catalog', 'drawer', 'history', 'seller/home'];
+
 function POSApp() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
 
   const [currentTab, setCurrentTab] = useState<NavigationTab>(() => {
     const hash = window.location.hash.replace('#', '') as NavigationTab;
-    const valid: NavigationTab[] = ['home', 'pos', 'catalog', 'drawer', 'history', 'login', 'seller/home'];
-    return valid.includes(hash) ? hash : 'seller/home';
+    const allValid: NavigationTab[] = [...ADMIN_TABS, ...SELLER_TABS, 'login'];
+    return allValid.includes(hash) ? hash : 'login';
   });
 
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
@@ -69,15 +73,14 @@ function POSApp() {
     localStorage.setItem('voltacc_dark_mode', JSON.stringify(darkMode));
   }, [darkMode]);
 
-  // Session navigation guard & URL Hash router
+  // Session navigation guard & URL Hash router with role isolation
   useEffect(() => {
     if (isLoading) return;
 
     const onHashChange = () => {
       const rawHash = window.location.hash.replace('#', '');
-      const valid: NavigationTab[] = ['home', 'pos', 'catalog', 'drawer', 'history', 'login', 'seller/home'];
 
-      if (!isAuthenticated) {
+      if (!isAuthenticated || !user) {
         if (rawHash !== 'login') {
           window.location.hash = 'login';
         }
@@ -85,11 +88,22 @@ function POSApp() {
         return;
       }
 
-      // Authenticated session handling
-      if (rawHash === 'login' || !rawHash || rawHash === '/') {
+      // Role isolation: Admin
+      if (user.role === 'admin') {
+        if (!ADMIN_TABS.includes(rawHash as NavigationTab)) {
+          window.location.hash = 'admin/users';
+          setCurrentTab('admin/users');
+        } else {
+          setCurrentTab(rawHash as NavigationTab);
+        }
+        return;
+      }
+
+      // Role isolation: Seller / Non-admin
+      if (rawHash === 'login' || !rawHash || rawHash === '/' || !SELLER_TABS.includes(rawHash as NavigationTab)) {
         window.location.hash = 'seller/home';
         setCurrentTab('seller/home');
-      } else if (valid.includes(rawHash as NavigationTab)) {
+      } else {
         setCurrentTab(rawHash as NavigationTab);
       }
     };
@@ -97,7 +111,7 @@ function POSApp() {
     onHashChange();
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
-  }, [isAuthenticated, isLoading]);
+  }, [isAuthenticated, isLoading, user]);
 
   const handleNavigate = (tab: NavigationTab) => {
     setCurrentTab(tab);
@@ -172,7 +186,24 @@ function POSApp() {
   }
 
   if (!isAuthenticated || currentTab === 'login') {
-    return <LoginView onLoginSuccess={() => handleNavigate('seller/home')} />;
+    return (
+      <LoginView
+        onLoginSuccess={() => {
+          const targetTab = user?.role === 'admin' ? 'admin/users' : 'seller/home';
+          handleNavigate(targetTab);
+        }}
+      />
+    );
+  }
+
+  // Admin Workspace
+  if (user?.role === 'admin') {
+    return (
+      <AdminUserManagementView
+        darkMode={darkMode}
+        onToggleDarkMode={() => setDarkMode(!darkMode)}
+      />
+    );
   }
 
   return (
