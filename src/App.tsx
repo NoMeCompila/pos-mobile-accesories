@@ -20,6 +20,7 @@ import { HomeDashboardView } from './components/HomeDashboardView';
 import { ReceiptModal } from './components/ReceiptModal';
 import { ShortcutsModal } from './components/ShortcutsModal';
 import { LoginView } from './components/LoginView';
+import { ToastProvider } from './context/ToastContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { useProducts, useCart } from './services/posStore';
 
@@ -360,7 +361,9 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <POSApp />
+        <ToastProvider>
+          <POSApp />
+        </ToastProvider>
       </AuthProvider>
     </QueryClientProvider>
   );

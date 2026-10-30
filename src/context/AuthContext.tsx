@@ -45,24 +45,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = useCallback(async (credentials: LoginCredentials): Promise<AuthSession> => {
-    setIsLoading(true);
-    try {
-      const newSession = await authService.login(credentials);
-      setSession(newSession);
-      return newSession;
-    } finally {
-      setIsLoading(false);
-    }
+    const newSession = await authService.login(credentials);
+    setSession(newSession);
+    return newSession;
   }, []);
 
   const logout = useCallback(async (): Promise<void> => {
-    setIsLoading(true);
-    try {
-      await authService.logout();
-      setSession(null);
-    } finally {
-      setIsLoading(false);
-    }
+    await authService.logout();
+    setSession(null);
   }, []);
 
   const value: AuthContextType = {
