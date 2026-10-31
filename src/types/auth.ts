@@ -2,15 +2,22 @@ export type UserRole = 'admin' | 'manager' | 'cashier' | 'technician' | 'custome
 
 export interface UserProfile {
   id: string;
-  username: string;
+  email: string;
+  username?: string;
   displayName: string;
+  firstName?: string;
+  lastName?: string;
   role: UserRole;
+  branchId?: string | null;
+  phone?: string | null;
+  status?: boolean;
   terminalId?: string;
 }
 
 export interface AuthSession {
   user: UserProfile;
   token: string;
+  refreshToken?: string;
   expiresAt: number;
   rememberDevice?: boolean;
 }

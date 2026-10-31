@@ -20,7 +20,7 @@ interface LoginViewProps {
 }
 
 export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
-  const { login, defaultRememberDevice, isLoading } = useAuth();
+  const { login, defaultRememberDevice, isLoading, isSessionExpired, clearSessionExpiredNotice } = useAuth();
 
   const [identifier, setIdentifier] = useState('vendedor');
   const [passKey, setPassKey] = useState('');
@@ -66,6 +66,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
+    clearSessionExpiredNotice();
 
     if (!validate()) {
       return;
@@ -139,6 +140,16 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
               Acceso al Sistema • Kinetic v4.2
             </p>
           </div>
+
+          {/* Session Expired Notice */}
+          {isSessionExpired && !errorMessage && (
+            <div className="mb-5 p-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300 text-xs flex items-start gap-2.5 animate-in fade-in slide-in-from-top-1">
+              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
+              <div className="flex-1 font-medium leading-relaxed">
+                Tu sesión ha expirado o el token de seguridad fue revocado. Por favor, ingresá nuevamente tus credenciales.
+              </div>
+            </div>
+          )}
 
           {/* Global Error Banner */}
           {errorMessage && (
