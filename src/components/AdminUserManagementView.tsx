@@ -28,16 +28,19 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { useUsers } from '../services/userStore';
 import { UserProfileRecord, UserRole } from '../types/auth';
+import { NavigationTab } from '../types/pos';
 import { CreateUserModal } from './CreateUserModal';
 
 interface AdminUserManagementViewProps {
   darkMode: boolean;
   onToggleDarkMode: () => void;
+  onNavigate: (tab: NavigationTab) => void;
 }
 
 export const AdminUserManagementView: React.FC<AdminUserManagementViewProps> = ({
   darkMode,
   onToggleDarkMode,
+  onNavigate,
 }) => {
   const { user, logout } = useAuth();
   const { users, createUser, updateUser, toggleUserStatus } = useUsers();
@@ -187,6 +190,7 @@ export const AdminUserManagementView: React.FC<AdminUserManagementViewProps> = (
         {/* Brand Logo */}
         <div className="flex flex-col items-center gap-1.5 w-full pb-4 border-b border-[#dae2fd]/40 dark:border-[#283044] mb-3">
           <div
+            onClick={() => onNavigate('admin/home')}
             className="w-10 h-10 rounded-xl bg-[#007bb9] flex items-center justify-center text-white shadow-sm cursor-pointer"
             title="VoltAcc POS"
           >
@@ -196,7 +200,9 @@ export const AdminUserManagementView: React.FC<AdminUserManagementViewProps> = (
 
         {/* Navigation Icon Rail */}
         <nav className="flex-1 w-full px-2 flex flex-col items-center gap-2">
+          {/* Tab 1: Resumen y Logs */}
           <button
+            onClick={() => onNavigate('admin/home')}
             className="w-12 h-12 flex items-center justify-center rounded-xl text-[#707881] hover:bg-[#eaedff] dark:hover:bg-[#1e293b] hover:text-[#131b2e] dark:hover:text-white transition-all cursor-pointer"
             title="Resumen y Logs"
           >
@@ -205,6 +211,7 @@ export const AdminUserManagementView: React.FC<AdminUserManagementViewProps> = (
 
           {/* Active Tab: Gestión de Usuarios */}
           <button
+            onClick={() => onNavigate('admin/users')}
             className="relative w-12 h-12 flex items-center justify-center rounded-xl bg-[#007bb9] text-white font-bold shadow-sm transition-all cursor-pointer"
             title="Gestión de Usuarios (Activo)"
           >

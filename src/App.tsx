@@ -21,6 +21,7 @@ import { ReceiptModal } from './components/ReceiptModal';
 import { ShortcutsModal } from './components/ShortcutsModal';
 import { LoginView } from './components/LoginView';
 import { AdminUserManagementView } from './components/AdminUserManagementView';
+import { AdminHomeDashboardView } from './components/AdminHomeDashboardView';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { useProducts, useCart } from './services/posStore';
 
@@ -32,7 +33,7 @@ const queryClient = new QueryClient({
   },
 });
 
-const ADMIN_TABS: NavigationTab[] = ['admin/users'];
+const ADMIN_TABS: NavigationTab[] = ['admin/home', 'admin/users'];
 const SELLER_TABS: NavigationTab[] = ['home', 'pos', 'catalog', 'drawer', 'history', 'seller/home'];
 
 function POSApp() {
@@ -91,8 +92,8 @@ function POSApp() {
       // Role isolation: Admin
       if (user.role === 'admin') {
         if (!ADMIN_TABS.includes(rawHash as NavigationTab)) {
-          window.location.hash = 'admin/users';
-          setCurrentTab('admin/users');
+          window.location.hash = 'admin/home';
+          setCurrentTab('admin/home');
         } else {
           setCurrentTab(rawHash as NavigationTab);
         }
@@ -189,7 +190,7 @@ function POSApp() {
     return (
       <LoginView
         onLoginSuccess={() => {
-          const targetTab = user?.role === 'admin' ? 'admin/users' : 'seller/home';
+          const targetTab = user?.role === 'admin' ? 'admin/home' : 'seller/home';
           handleNavigate(targetTab);
         }}
       />
@@ -198,10 +199,20 @@ function POSApp() {
 
   // Admin Workspace
   if (user?.role === 'admin') {
+    if (currentTab === 'admin/home') {
+      return (
+        <AdminHomeDashboardView
+          darkMode={darkMode}
+          onToggleDarkMode={() => setDarkMode(!darkMode)}
+          onNavigate={handleNavigate}
+        />
+      );
+    }
     return (
       <AdminUserManagementView
         darkMode={darkMode}
         onToggleDarkMode={() => setDarkMode(!darkMode)}
+        onNavigate={handleNavigate}
       />
     );
   }

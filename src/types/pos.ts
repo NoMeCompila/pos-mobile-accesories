@@ -6,6 +6,7 @@ export type NavigationTab =
   | 'history'
   | 'login'
   | 'seller/home'
+  | 'admin/home'
   | 'admin/users';
 
 export type PaymentMethod = 'cash' | 'card' | 'bizum' | 'split';
