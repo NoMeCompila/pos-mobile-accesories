@@ -8,6 +8,12 @@ import {
   Receipt,
   Search,
   X,
+  AlertCircle,
+  Wrench,
+  BarChart3,
+  Layers,
+  Users,
+  UserCheck,
 } from 'lucide-react';
 import { NavigationTab, Ticket, Product } from './types/pos';
 import { Sidebar } from './components/Sidebar';
@@ -22,6 +28,11 @@ import { ShortcutsModal } from './components/ShortcutsModal';
 import { LoginView } from './components/LoginView';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { useProducts, useCart } from './services/posStore';
+import {
+  canAccessRoute,
+  getDefaultRouteForRole,
+  normalizeRoute,
+} from './middleware/rolePermissionMiddleware';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -31,15 +42,63 @@ const queryClient = new QueryClient({
   },
 });
 
+function ModulePlaceholderView({
+  title,
+  description,
+  role,
+  onBack,
+}: {
+  title: string;
+  description: string;
+  role?: string;
+  onBack: () => void;
+}) {
+  return (
+    <div className="p-8 bg-white dark:bg-[#131b2e] rounded-3xl border border-[#dae2fd]/60 dark:border-[#283044] shadow-sm max-w-4xl mx-auto flex flex-col gap-6 animate-in fade-in">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#dae2fd]/40 dark:border-slate-800 pb-4">
+        <div>
+          <h2 className="text-2xl font-bold font-headline text-[#131b2e] dark:text-white">
+            {title}
+          </h2>
+          <p className="text-sm text-[#707881] dark:text-slate-400 mt-1">{description}</p>
+        </div>
+        <span className="self-start sm:self-auto px-3 py-1 rounded-full text-xs font-bold bg-[#dae2fd] dark:bg-slate-800 text-[#006194] dark:text-[#93ccff]">
+          Rol: {role?.toUpperCase() || 'AUTORIZADO'}
+        </span>
+      </div>
+      <div className="p-8 rounded-2xl bg-[#faf8ff] dark:bg-slate-900/60 border border-dashed border-[#dae2fd] dark:border-slate-800 text-center flex flex-col items-center gap-4">
+        <div className="w-12 h-12 rounded-2xl bg-[#eaedff] dark:bg-slate-800 text-[#006194] dark:text-[#93ccff] flex items-center justify-center">
+          <Store className="w-6 h-6" />
+        </div>
+        <div>
+          <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+            Módulo Activo y Autorizado
+          </p>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-md mx-auto">
+            Este módulo forma parte del sistema integral de retail y está verificado por el
+            middleware de control de acceso RBAC.
+          </p>
+        </div>
+        <button
+          onClick={onBack}
+          className="px-4 py-2 rounded-xl bg-[#006194] hover:bg-[#007bb9] text-white text-xs font-bold transition-colors cursor-pointer"
+        >
+          Volver a Terminal
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function POSApp() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
 
   const [currentTab, setCurrentTab] = useState<NavigationTab>(() => {
-    const hash = window.location.hash.replace('#', '') as NavigationTab;
-    const valid: NavigationTab[] = ['home', 'pos', 'catalog', 'drawer', 'history', 'login', 'seller/home'];
-    return valid.includes(hash) ? hash : 'seller/home';
+    const raw = window.location.hash.replace('#', '');
+    return normalizeRoute(raw);
   });
 
+  const [authAlert, setAuthAlert] = useState<string | null>(null);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [activeReceiptTicket, setActiveReceiptTicket] = useState<Ticket | null>(null);
   const [isShortcutsModalOpen, setIsShortcutsModalOpen] = useState(false);
@@ -69,37 +128,77 @@ function POSApp() {
     localStorage.setItem('voltacc_dark_mode', JSON.stringify(darkMode));
   }, [darkMode]);
 
-  // Session navigation guard & URL Hash router
+  // Auto-dismiss authAlert banner after 4 seconds
+  useEffect(() => {
+    if (!authAlert) return;
+    const timer = setTimeout(() => setAuthAlert(null), 4000);
+    return () => clearTimeout(timer);
+  }, [authAlert]);
+
+  // Session navigation guard & URL Hash router with Role Permission Middleware
   useEffect(() => {
     if (isLoading) return;
 
     const onHashChange = () => {
       const rawHash = window.location.hash.replace('#', '');
-      const valid: NavigationTab[] = ['home', 'pos', 'catalog', 'drawer', 'history', 'login', 'seller/home'];
+      const targetTab = normalizeRoute(rawHash);
 
       if (!isAuthenticated) {
-        if (rawHash !== 'login') {
+        if (targetTab !== 'login') {
           window.location.hash = 'login';
         }
         setCurrentTab('login');
         return;
       }
 
-      // Authenticated session handling
-      if (rawHash === 'login' || !rawHash || rawHash === '/') {
-        window.location.hash = 'seller/home';
-        setCurrentTab('seller/home');
-      } else if (valid.includes(rawHash as NavigationTab)) {
-        setCurrentTab(rawHash as NavigationTab);
+      // If authenticated user lands on login or empty root, route to designated default
+      if (targetTab === 'login' || !rawHash || rawHash === '/') {
+        const defaultRoute = getDefaultRouteForRole(user?.role);
+        window.location.hash = defaultRoute;
+        setCurrentTab(defaultRoute);
+        return;
       }
+
+      // Role permission check: enforce route security
+      if (!canAccessRoute(user?.role, targetTab)) {
+        setAuthAlert(
+          'Acceso Denegado: Tu rol de usuario no tiene permisos para acceder al módulo solicitado.'
+        );
+        const fallback = getDefaultRouteForRole(user?.role);
+        window.location.hash = fallback;
+        setCurrentTab(fallback);
+        return;
+      }
+
+      setAuthAlert(null);
+      setCurrentTab(targetTab);
     };
 
     onHashChange();
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
-  }, [isAuthenticated, isLoading]);
+  }, [isAuthenticated, isLoading, user]);
 
   const handleNavigate = (tab: NavigationTab) => {
+    if (!isAuthenticated && tab !== 'login') {
+      window.location.hash = 'login';
+      setCurrentTab('login');
+      return;
+    }
+
+    if (isAuthenticated) {
+      if (!canAccessRoute(user?.role, tab)) {
+        setAuthAlert(
+          'Acceso Denegado: Tu rol de usuario no tiene permisos para acceder al módulo solicitado.'
+        );
+        const fallback = getDefaultRouteForRole(user?.role);
+        window.location.hash = fallback;
+        setCurrentTab(fallback);
+        return;
+      }
+    }
+
+    setAuthAlert(null);
     setCurrentTab(tab);
     window.location.hash = tab;
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -108,7 +207,6 @@ function POSApp() {
   // Keyboard Shortcuts Listener
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Ignore if user is inside a form input/textarea unless it's specific function keys
       const target = e.target as HTMLElement;
       const isInput = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA';
 
@@ -172,7 +270,7 @@ function POSApp() {
   }
 
   if (!isAuthenticated || currentTab === 'login') {
-    return <LoginView onLoginSuccess={() => handleNavigate('seller/home')} />;
+    return <LoginView onLoginSuccess={() => handleNavigate(getDefaultRouteForRole(user?.role))} />;
   }
 
   return (
@@ -201,6 +299,22 @@ function POSApp() {
 
         {/* Dynamic Route Canvas */}
         <main className="flex-1 pt-16 px-4 sm:px-6 py-4 max-w-[1600px] w-full mx-auto">
+          {/* Unauthorized Alert Banner */}
+          {authAlert && (
+            <div className="mb-4 p-4 rounded-2xl bg-red-50 dark:bg-red-950/70 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-xs sm:text-sm flex items-center justify-between shadow-md animate-in fade-in slide-in-from-top-2">
+              <div className="flex items-center gap-2.5">
+                <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 shrink-0" />
+                <span className="font-semibold">{authAlert}</span>
+              </div>
+              <button
+                onClick={() => setAuthAlert(null)}
+                className="p-1 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/40 text-red-600 dark:text-red-400 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+
           {(currentTab === 'home' || currentTab === 'seller/home') && (
             <HomeDashboardView onNavigate={handleNavigate} />
           )}
@@ -221,9 +335,54 @@ function POSApp() {
               onNavigateToDrawer={() => handleNavigate('drawer')}
             />
           )}
+
+          {currentTab === 'workshop' && (
+            <ModulePlaceholderView
+              title="Taller de Reparaciones y Servicios Técnicos"
+              description="Diagnóstico, órdenes de servicio, control de repuestos y estados de entrega de equipos."
+              role={user?.role}
+              onBack={() => handleNavigate(getDefaultRouteForRole(user?.role))}
+            />
+          )}
+
+          {currentTab === 'reports/financial' && (
+            <ModulePlaceholderView
+              title="Consolidados y Reportes Financieros"
+              description="Libro IVA Ventas, totales de recaudación por turno, cierre Z y exportación contable."
+              role={user?.role}
+              onBack={() => handleNavigate(getDefaultRouteForRole(user?.role))}
+            />
+          )}
+
+          {currentTab === 'inventory/costs' && (
+            <ModulePlaceholderView
+              title="Costos de Compra y Proveedores Mayoristas"
+              description="Márgenes de ganancia, costos mayoristas de reposición y cuentas corrientes de proveedores."
+              role={user?.role}
+              onBack={() => handleNavigate(getDefaultRouteForRole(user?.role))}
+            />
+          )}
+
+          {currentTab === 'settings/users' && (
+            <ModulePlaceholderView
+              title="Gestión de Operadores y Permisos RBAC"
+              description="Administración de perfiles de cajeros, asignación de sucursales y control de accesos."
+              role={user?.role}
+              onBack={() => handleNavigate(getDefaultRouteForRole(user?.role))}
+            />
+          )}
+
+          {currentTab === 'customer/orders' && (
+            <ModulePlaceholderView
+              title="Portal de Seguimiento del Cliente"
+              description="Consulta del estado de reparación de dispositivos móviles mediante código de seguimiento."
+              role={user?.role}
+              onBack={() => handleNavigate(getDefaultRouteForRole(user?.role))}
+            />
+          )}
         </main>
 
-        {/* Mobile Bottom Navigation Bar (Matching Image 11) */}
+        {/* Mobile Bottom Navigation Bar */}
         <nav className="fixed bottom-0 left-0 right-0 h-16 bg-[#faf8ff]/95 dark:bg-[#131b2e]/95 backdrop-blur-xl border-t border-[#dae2fd]/60 dark:border-[#283044] z-40 flex items-center justify-around px-2 lg:hidden shadow-lg">
           {[
             { id: 'home' as NavigationTab, label: 'Home', icon: Home },
@@ -231,24 +390,27 @@ function POSApp() {
             { id: 'catalog' as NavigationTab, label: 'Catálogo', icon: Boxes },
             { id: 'drawer' as NavigationTab, label: 'Caja', icon: LockKeyhole },
             { id: 'history' as NavigationTab, label: 'Historial', icon: Receipt },
-          ].map((tab) => {
-            const Icon = tab.icon;
-            const isActive = currentTab === tab.id || (tab.id === 'home' && currentTab === 'seller/home');
-            return (
-              <button
-                key={tab.id}
-                onClick={() => handleNavigate(tab.id)}
-                className={`flex flex-col items-center justify-center flex-1 py-1 transition-colors ${
-                  isActive
-                    ? 'text-[#006194] dark:text-[#93ccff] font-bold'
-                    : 'text-[#707881] dark:text-slate-400'
-                }`}
-              >
-                <Icon className="w-5 h-5" />
-                <span className="text-[10px] mt-0.5 tracking-tight">{tab.label}</span>
-              </button>
-            );
-          })}
+          ]
+            .filter((tab) => canAccessRoute(user?.role, tab.id))
+            .map((tab) => {
+              const Icon = tab.icon;
+              const isActive =
+                currentTab === tab.id || (tab.id === 'home' && currentTab === 'seller/home');
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => handleNavigate(tab.id)}
+                  className={`flex flex-col items-center justify-center flex-1 py-1 transition-colors ${
+                    isActive
+                      ? 'text-[#006194] dark:text-[#93ccff] font-bold'
+                      : 'text-[#707881] dark:text-slate-400'
+                  }`}
+                >
+                  <Icon className="w-5 h-5" />
+                  <span className="text-[10px] mt-0.5 tracking-tight">{tab.label}</span>
+                </button>
+              );
+            })}
         </nav>
       </div>
 
@@ -264,12 +426,12 @@ function POSApp() {
                 Terminal Bloqueada
               </h3>
               <p className="text-xs text-[#707881] dark:text-slate-400 mt-1">
-                Caja 02 • Downtown Flagship • Cajero: E. Harrison
+                Operador: {user?.displayName || 'Caja 02'} • Rol: {user?.role || 'Cajero'}
               </p>
             </div>
             <button
               onClick={() => setIsTerminalLocked(false)}
-              className="w-full h-11 rounded-xl bg-[#006194] text-white font-bold text-sm shadow-md hover:bg-[#007bb9]"
+              className="w-full h-11 rounded-xl bg-[#006194] text-white font-bold text-sm shadow-md hover:bg-[#007bb9] cursor-pointer"
             >
               Desbloquear Terminal
             </button>

@@ -5,12 +5,19 @@ import {
   Boxes,
   LockKeyhole,
   Receipt,
+  Wrench,
+  BarChart3,
+  Layers,
+  Users,
+  UserCheck,
   Zap,
   Moon,
   Sun,
   X,
 } from 'lucide-react';
 import { NavigationTab } from '../types/pos';
+import { useAuth } from '../context/AuthContext';
+import { canAccessRoute } from '../middleware/rolePermissionMiddleware';
 
 interface SidebarProps {
   currentTab: NavigationTab;
@@ -29,13 +36,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
   darkMode,
   onToggleDarkMode,
 }) => {
-  const navItems = [
-    { id: 'home' as NavigationTab, label: 'Home', icon: Home },
+  const { user } = useAuth();
+
+  const allNavItems = [
+    { id: 'home' as NavigationTab, label: 'Dashboard General', icon: Home },
     { id: 'pos' as NavigationTab, label: 'Terminal de Venta', icon: Store },
     { id: 'catalog' as NavigationTab, label: 'Catálogo y Stock', icon: Boxes },
     { id: 'drawer' as NavigationTab, label: 'Apertura/cierre de Caja', icon: LockKeyhole },
-    { id: 'history' as NavigationTab, label: 'Historial de Mis Ventas', icon: Receipt },
+    { id: 'history' as NavigationTab, label: 'Historial de Ventas', icon: Receipt },
+    { id: 'workshop' as NavigationTab, label: 'Taller de Reparaciones', icon: Wrench },
+    { id: 'reports/financial' as NavigationTab, label: 'Reportes Financieros', icon: BarChart3 },
+    { id: 'inventory/costs' as NavigationTab, label: 'Costos y Proveedores', icon: Layers },
+    { id: 'settings/users' as NavigationTab, label: 'Gestión de Usuarios', icon: Users },
+    { id: 'customer/orders' as NavigationTab, label: 'Portal del Cliente', icon: UserCheck },
   ];
+
+  // Filter allowed navigation items dynamically according to active user role
+  const navItems = allNavItems.filter((item) => canAccessRoute(user?.role, item.id));
 
   const handleSelect = (tab: NavigationTab) => {
     onNavigate(tab);
@@ -86,7 +103,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
 
           {/* Navigation Links */}
-          <nav className="flex flex-col gap-1 px-3 mt-4">
+          <nav className="flex flex-col gap-1 px-3 mt-4 max-h-[calc(100vh-220px)] overflow-y-auto no-scrollbar">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = currentTab === item.id || (item.id === 'home' && currentTab === 'seller/home');
@@ -94,13 +111,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <button
                   key={item.id}
                   onClick={() => handleSelect(item.id)}
-                  className={`flex items-center gap-3 px-3.5 h-12 rounded-lg font-medium text-sm transition-all text-left ${
+                  className={`flex items-center gap-3 px-3.5 h-11 rounded-lg font-medium text-sm transition-all text-left ${
                     isActive
                       ? 'bg-[#007bb9] text-white shadow-sm font-semibold'
                       : 'text-[#3f4850] dark:text-slate-300 hover:bg-[#eaedff] dark:hover:bg-[#1e293b] hover:text-[#131b2e] dark:hover:text-white'
                   }`}
                 >
-                  <Icon className={`w-5 h-5 ${isActive ? 'text-white' : 'text-[#707881] dark:text-slate-400'}`} />
+                  <Icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-white' : 'text-[#707881] dark:text-slate-400'}`} />
                   <span className="truncate">{item.label}</span>
                 </button>
               );
@@ -117,17 +134,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#006947]"></span>
               </span>
               <span className="text-xs font-semibold text-[#131b2e] dark:text-slate-200">
-                Caja 02 • Turno Activo
+                {user?.displayName || 'Caja 02'}
               </span>
             </div>
             <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#6ffbbe] text-[#002113] uppercase tracking-wide">
-              Online
+              {user?.role?.toUpperCase() || 'ONLINE'}
             </span>
           </div>
 
           <div className="flex items-center justify-between pt-1 border-t border-[#dae2fd]/60 dark:border-slate-700 text-xs">
             <span className="font-mono-num text-[11px] text-[#3f4850] dark:text-slate-400">
-              Terminal Node #02
+              Terminal #04
             </span>
             <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#dae2fd] dark:bg-slate-700 text-[#131b2e] dark:text-slate-200">
               POS
@@ -137,7 +154,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {/* Dark Mode Toggle */}
           <button
             onClick={onToggleDarkMode}
-            className="mt-1 w-full h-9 rounded-lg bg-white/70 dark:bg-slate-800/80 hover:bg-white dark:hover:bg-slate-800 text-[#131b2e] dark:text-slate-200 text-xs font-semibold flex items-center justify-center gap-2 transition-colors border border-[#dae2fd]/40 dark:border-slate-700"
+            className="mt-1 w-full h-9 rounded-lg bg-white/70 dark:bg-slate-800/80 hover:bg-white dark:hover:bg-slate-800 text-[#131b2e] dark:text-slate-200 text-xs font-semibold flex items-center justify-center gap-2 transition-colors border border-[#dae2fd]/40 dark:border-slate-700 cursor-pointer"
           >
             {darkMode ? (
               <>
