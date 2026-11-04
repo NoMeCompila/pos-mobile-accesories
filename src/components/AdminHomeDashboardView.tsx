@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import {
   Zap,
   BarChart3,
@@ -178,25 +178,25 @@ export const AdminHomeDashboardView: React.FC<AdminHomeDashboardViewProps> = ({
             <span className="absolute -left-1 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-[#006194] rounded-r-full" />
           </button>
 
-          {/* Tab 2: Gestión de Usuarios */}
+          {/* Tab 2: GestiÃ³n de Usuarios */}
           <button
             onClick={() => onNavigate('admin/users')}
             className="w-12 h-12 flex items-center justify-center rounded-xl text-[#707881] hover:bg-[#eaedff] dark:hover:bg-[#1e293b] hover:text-[#131b2e] dark:hover:text-white transition-all cursor-pointer"
-            title="Gestión de Usuarios"
+            title="GestiÃ³n de Usuarios"
           >
             <UserCog className="w-5 h-5" />
           </button>
 
           <button
             className="w-12 h-12 flex items-center justify-center rounded-xl text-[#707881] hover:bg-[#eaedff] dark:hover:bg-[#1e293b] hover:text-[#131b2e] dark:hover:text-white transition-all cursor-pointer"
-            title="Backup & Restore (Próximamente)"
+            title="Backup & Restore (PrÃ³ximamente)"
           >
             <RotateCcw className="w-5 h-5" />
           </button>
 
           <button
             className="w-12 h-12 flex items-center justify-center rounded-xl text-[#707881] hover:bg-[#eaedff] dark:hover:bg-[#1e293b] hover:text-[#131b2e] dark:hover:text-white transition-all cursor-pointer"
-            title="Configuración (Próximamente)"
+            title="ConfiguraciÃ³n (PrÃ³ximamente)"
           >
             <Sliders className="w-5 h-5" />
           </button>
@@ -225,7 +225,7 @@ export const AdminHomeDashboardView: React.FC<AdminHomeDashboardViewProps> = ({
           <button
             onClick={logout}
             className="w-10 h-10 rounded-xl text-[#ba1a1a] dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 flex items-center justify-center transition-colors cursor-pointer"
-            title="Cerrar Sesión"
+            title="Cerrar SesiÃ³n"
           >
             <LogOut className="w-5 h-5" />
           </button>
@@ -248,7 +248,7 @@ export const AdminHomeDashboardView: React.FC<AdminHomeDashboardViewProps> = ({
             <button
               onClick={() => setIsMobileNavOpen(true)}
               className="lg:hidden p-2 rounded-xl text-[#707881] hover:bg-[#eaedff] dark:hover:bg-[#1e293b]"
-              title="Abrir Menú"
+              title="Abrir MenÃº"
             >
               <Menu className="w-5 h-5" />
             </button>
@@ -257,11 +257,11 @@ export const AdminHomeDashboardView: React.FC<AdminHomeDashboardViewProps> = ({
                 Humans In The Loop
               </span>
               <span className="text-xs text-[#707881] dark:text-slate-400 hidden sm:inline">
-                • POS & Backoffice
+                â€¢ POS & Backoffice
               </span>
             </div>
             <span className="px-2 py-0.5 rounded-md bg-[#dae2fd] dark:bg-[#1e293b] text-[#006194] dark:text-[#93ccff] text-[11px] font-bold tracking-wider">
-              PROD • SUPABASE
+              PROD â€¢ SUPABASE
             </span>
           </div>
 
@@ -291,14 +291,14 @@ export const AdminHomeDashboardView: React.FC<AdminHomeDashboardViewProps> = ({
                 Centro de Control & Observabilidad
               </h1>
               <p className="text-sm text-[#707881] dark:text-slate-400 mt-0.5">
-                Métricas del sistema, auditoría de eventos en vivo y estado de integraciones críticas.
+                MÃ©tricas del sistema, auditorÃ­a de eventos en vivo y estado de integraciones crÃ­ticas.
               </p>
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-xs font-semibold">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                <span>En Vivo • Websocket PostgreSQL</span>
+                <span>En Vivo â€¢ Websocket PostgreSQL</span>
               </div>
 
               {/* Pause / Resume Button */}
@@ -359,7 +359,7 @@ export const AdminHomeDashboardView: React.FC<AdminHomeDashboardViewProps> = ({
                 </span>
               </div>
               <p className="text-xs text-[#707881] dark:text-slate-400 truncate">
-                {kpis?.activeSessions.breakdownText ?? '9 cajeros en TPV • 3 supervisores • 2 admins'}
+                {kpis?.activeSessions.breakdownText ?? '9 cajeros en TPV â€¢ 3 supervisores â€¢ 2 admins'}
               </p>
             </div>
 
@@ -381,7 +381,7 @@ export const AdminHomeDashboardView: React.FC<AdminHomeDashboardViewProps> = ({
               </div>
               <div className="flex flex-col gap-1">
                 <span className="text-[11px] text-[#707881] dark:text-slate-400 truncate">
-                  {kpis?.securityEvents24h.breakdownText ?? '5 reintentos fallidos • 2 bloqueos de PIN'}
+                  {kpis?.securityEvents24h.breakdownText ?? '5 reintentos fallidos â€¢ 2 bloqueos de PIN'}
                 </span>
                 <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 font-mono text-[10px] font-semibold w-fit truncate">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#ba1a1a]" />
@@ -410,7 +410,7 @@ export const AdminHomeDashboardView: React.FC<AdminHomeDashboardViewProps> = ({
                 </span>
               </div>
               <div className="text-xs text-[#707881] dark:text-slate-400 truncate">
-                {kpis?.dbLatencyAndConnections.auxiliaryStatusText ?? 'ARCA: Online 99.8% • Cloudinary: 42% cuota'}
+                {kpis?.dbLatencyAndConnections.auxiliaryStatusText ?? 'ARCA: Online 99.8% â€¢ Cloudinary: 42% cuota'}
               </div>
             </div>
 
@@ -446,7 +446,7 @@ export const AdminHomeDashboardView: React.FC<AdminHomeDashboardViewProps> = ({
               </div>
               <div className="flex items-center justify-between text-[#707881] dark:text-slate-400 text-xs">
                 <span className="text-emerald-600 dark:text-emerald-400 font-semibold truncate">
-                  {kpis?.apiErrorRate.successText ?? '99.96% éxito (18.4k reqs)'}
+                  {kpis?.apiErrorRate.successText ?? '99.96% Ã©xito (18.4k reqs)'}
                 </span>
                 <span className="font-mono text-[10px] bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded">
                   {kpis?.apiErrorRate.pendingOfflineCount ?? 0} off.
@@ -463,7 +463,7 @@ export const AdminHomeDashboardView: React.FC<AdminHomeDashboardViewProps> = ({
                 <div className="flex items-center gap-2">
                   <Activity className="w-5 h-5 text-[#006194] dark:text-[#93ccff]" />
                   <h3 className="text-base sm:text-lg font-bold text-[#131b2e] dark:text-white">
-                    Feed en Vivo: Eventos de Autenticación
+                    Feed en Vivo: Eventos de AutenticaciÃ³n
                   </h3>
                 </div>
 
@@ -505,7 +505,7 @@ export const AdminHomeDashboardView: React.FC<AdminHomeDashboardViewProps> = ({
                   </div>
                 ) : filteredAuthEvents.length === 0 ? (
                   <div className="py-8 text-center text-xs text-slate-400">
-                    No hay eventos de autenticación para el filtro seleccionado.
+                    No hay eventos de autenticaciÃ³n para el filtro seleccionado.
                   </div>
                 ) : (
                   filteredAuthEvents.map((evt) => (
@@ -522,7 +522,7 @@ export const AdminHomeDashboardView: React.FC<AdminHomeDashboardViewProps> = ({
                             {evt.userEmail}
                           </span>
                           <span className="text-[11px] text-[#707881] dark:text-slate-400">
-                            • {evt.roleLabel}
+                            â€¢ {evt.roleLabel}
                           </span>
                         </div>
                         <span
@@ -542,9 +542,9 @@ export const AdminHomeDashboardView: React.FC<AdminHomeDashboardViewProps> = ({
 
                       <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-[#707881] dark:text-slate-400 font-mono">
                         <span>Terminal: {evt.terminalId}</span>
-                        <span>•</span>
+                        <span>â€¢</span>
                         <span>{evt.clientInfo}</span>
-                        <span>•</span>
+                        <span>â€¢</span>
                         <span className={evt.category === 'ALERT' ? 'text-[#ba1a1a] dark:text-rose-400 font-bold' : ''}>
                           IP: {evt.ipAddress} {evt.countryCode ? `(${evt.countryCode})` : ''}
                         </span>
@@ -630,12 +630,12 @@ export const AdminHomeDashboardView: React.FC<AdminHomeDashboardViewProps> = ({
                       {arca?.fecaeLatencyMs ?? 312} ms
                     </span>
                     <span className="text-[10px] text-[#707881] dark:text-slate-400">
-                      Promedio últimas 50 facturas
+                      Promedio Ãºltimas 50 facturas
                     </span>
                   </div>
                   <div className="p-3 bg-[#f2f3ff]/60 dark:bg-[#1a233b]/60 rounded-lg flex flex-col">
                     <span className="text-[10px] font-bold text-[#707881] dark:text-slate-400 uppercase">
-                      Último CAE Autorizado
+                      Ãšltimo CAE Autorizado
                     </span>
                     <span className="font-mono text-xs font-bold text-[#131b2e] dark:text-white truncate">
                       {arca?.lastAuthorizedCae ?? '74192837491023'}
@@ -690,7 +690,7 @@ export const AdminHomeDashboardView: React.FC<AdminHomeDashboardViewProps> = ({
                     </div>
                   </div>
                   <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400">
-                    {cdn?.status ?? 'Óptimo'}
+                    {cdn?.status ?? 'Ã“ptimo'}
                   </span>
                 </div>
 
@@ -716,7 +716,7 @@ export const AdminHomeDashboardView: React.FC<AdminHomeDashboardViewProps> = ({
                 </div>
 
                 <div className="flex items-center justify-between p-3 bg-[#f2f3ff]/60 dark:bg-[#1a233b]/60 rounded-lg text-xs text-[#131b2e] dark:text-slate-300">
-                  <span>{cdn?.catalogImagesCount ?? 1480} imágenes de catálogo</span>
+                  <span>{cdn?.catalogImagesCount ?? 1480} imÃ¡genes de catÃ¡logo</span>
                   <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400">
                     {cdn?.edgeCacheHitRatePercent ?? 99.4}% Edge Cache Hit
                   </span>
@@ -732,7 +732,7 @@ export const AdminHomeDashboardView: React.FC<AdminHomeDashboardViewProps> = ({
                 <div className="flex items-center gap-2">
                   <Database className="w-5 h-5 text-[#006194] dark:text-[#93ccff]" />
                   <h3 className="text-base sm:text-lg font-bold text-[#131b2e] dark:text-white">
-                    Registro de Auditoría de Base de Datos (CDC Audit Trail)
+                    Registro de AuditorÃ­a de Base de Datos (CDC Audit Trail)
                   </h3>
                 </div>
                 <p className="text-xs text-[#707881] dark:text-slate-400 mt-0.5">
@@ -776,7 +776,7 @@ export const AdminHomeDashboardView: React.FC<AdminHomeDashboardViewProps> = ({
                   <tr className="bg-[#f2f3ff] dark:bg-[#1e293b] text-[#707881] dark:text-slate-400 text-[11px] font-bold uppercase tracking-wider">
                     <th className="py-2.5 px-3 rounded-l-lg">Timestamp</th>
                     <th className="py-2.5 px-3">Tabla</th>
-                    <th className="py-2.5 px-3">Operación</th>
+                    <th className="py-2.5 px-3">OperaciÃ³n</th>
                     <th className="py-2.5 px-3">Usuario / Rol</th>
                     <th className="py-2.5 px-3">Registro Afectado</th>
                     <th className="py-2.5 px-3">Cambios (Diff)</th>
@@ -834,7 +834,7 @@ export const AdminHomeDashboardView: React.FC<AdminHomeDashboardViewProps> = ({
                                 </span>
                               )}
                               {log.diffSummary.oldValueText && log.diffSummary.newValueText && (
-                                <span className="text-slate-400">→</span>
+                                <span className="text-slate-400">â†’</span>
                               )}
                               {log.diffSummary.newValueText && (
                                 <span className="text-emerald-600 dark:text-emerald-400 font-bold">

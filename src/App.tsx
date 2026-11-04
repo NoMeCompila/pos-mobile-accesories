@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
   Home,
@@ -22,6 +22,7 @@ import { ShortcutsModal } from './components/ShortcutsModal';
 import { LoginView } from './components/LoginView';
 import { AdminUserManagementView } from './components/AdminUserManagementView';
 import { AdminHomeDashboardView } from './components/AdminHomeDashboardView';
+import { AdminBackupRecoveryView } from './components/AdminBackupRecoveryView';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { useProducts, useCart } from './services/posStore';
 
@@ -33,7 +34,7 @@ const queryClient = new QueryClient({
   },
 });
 
-const ADMIN_TABS: NavigationTab[] = ['admin/home', 'admin/users'];
+const ADMIN_TABS: NavigationTab[] = ['admin/home', 'admin/users', 'admin/backup'];
 const SELLER_TABS: NavigationTab[] = ['home', 'pos', 'catalog', 'drawer', 'history', 'seller/home'];
 
 function POSApp() {
@@ -208,6 +209,15 @@ function POSApp() {
         />
       );
     }
+    if (currentTab === 'admin/backup') {
+      return (
+        <AdminBackupRecoveryView
+          darkMode={darkMode}
+          onToggleDarkMode={() => setDarkMode(!darkMode)}
+          onNavigate={handleNavigate}
+        />
+      );
+    }
     return (
       <AdminUserManagementView
         darkMode={darkMode}
@@ -270,7 +280,7 @@ function POSApp() {
           {[
             { id: 'home' as NavigationTab, label: 'Home', icon: Home },
             { id: 'pos' as NavigationTab, label: 'Venta', icon: Store },
-            { id: 'catalog' as NavigationTab, label: 'Catálogo', icon: Boxes },
+            { id: 'catalog' as NavigationTab, label: 'CatÃ¡logo', icon: Boxes },
             { id: 'drawer' as NavigationTab, label: 'Caja', icon: LockKeyhole },
             { id: 'history' as NavigationTab, label: 'Historial', icon: Receipt },
           ].map((tab) => {
@@ -306,7 +316,7 @@ function POSApp() {
                 Terminal Bloqueada
               </h3>
               <p className="text-xs text-[#707881] dark:text-slate-400 mt-1">
-                Caja 02 • Downtown Flagship • Cajero: E. Harrison
+                Caja 02 â€¢ Downtown Flagship â€¢ Cajero: E. Harrison
               </p>
             </div>
             <button
@@ -358,7 +368,7 @@ function POSApp() {
                       {p.name}
                     </span>
                     <span className="font-mono-num text-[10px] text-[#707881]">
-                      {p.sku} • Stock: {p.stock} uds ({p.location})
+                      {p.sku} â€¢ Stock: {p.stock} uds ({p.location})
                     </span>
                   </div>
                   <div className="flex items-center gap-2">

@@ -1,4 +1,4 @@
-export type NavigationTab =
+﻿export type NavigationTab =
   | 'home'
   | 'pos'
   | 'catalog'
@@ -7,7 +7,8 @@ export type NavigationTab =
   | 'login'
   | 'seller/home'
   | 'admin/home'
-  | 'admin/users';
+  | 'admin/users'
+  | 'admin/backup';
 
 export type PaymentMethod = 'cash' | 'card' | 'bizum' | 'split';
 

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+﻿import React, { useState, useMemo } from 'react';
 import {
   Zap,
   BarChart3,
@@ -79,7 +79,7 @@ export const AdminUserManagementView: React.FC<AdminUserManagementViewProps> = (
 
   // Export CSV
   const handleExportCSV = () => {
-    const headers = ['ID', 'Email', 'Nombre', 'Apellido', 'Rol', 'Sucursal', 'Teléfono', 'Estado', 'Creado'];
+    const headers = ['ID', 'Email', 'Nombre', 'Apellido', 'Rol', 'Sucursal', 'TelÃ©fono', 'Estado', 'Creado'];
     const rows = filteredUsers.map((u) => [
       u.id,
       u.email,
@@ -209,11 +209,11 @@ export const AdminUserManagementView: React.FC<AdminUserManagementViewProps> = (
             <BarChart3 className="w-5 h-5" />
           </button>
 
-          {/* Active Tab: Gestión de Usuarios */}
+          {/* Active Tab: GestiÃ³n de Usuarios */}
           <button
             onClick={() => onNavigate('admin/users')}
             className="relative w-12 h-12 flex items-center justify-center rounded-xl bg-[#007bb9] text-white font-bold shadow-sm transition-all cursor-pointer"
-            title="Gestión de Usuarios (Activo)"
+            title="GestiÃ³n de Usuarios (Activo)"
           >
             <UserCog className="w-5 h-5" />
             <span className="absolute -left-1 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-[#006194] rounded-r-full" />
@@ -221,14 +221,14 @@ export const AdminUserManagementView: React.FC<AdminUserManagementViewProps> = (
 
           <button
             className="w-12 h-12 flex items-center justify-center rounded-xl text-[#707881] hover:bg-[#eaedff] dark:hover:bg-[#1e293b] hover:text-[#131b2e] dark:hover:text-white transition-all cursor-pointer"
-            title="Backup & Restore"
+            onClick={() => onNavigate('admin/backup')} title="Backup & Restore"
           >
             <RotateCcw className="w-5 h-5" />
           </button>
 
           <button
             className="w-12 h-12 flex items-center justify-center rounded-xl text-[#707881] hover:bg-[#eaedff] dark:hover:bg-[#1e293b] hover:text-[#131b2e] dark:hover:text-white transition-all cursor-pointer"
-            title="Configuración"
+            title="ConfiguraciÃ³n"
           >
             <Sliders className="w-5 h-5" />
           </button>
@@ -257,7 +257,7 @@ export const AdminUserManagementView: React.FC<AdminUserManagementViewProps> = (
           <button
             onClick={logout}
             className="w-10 h-10 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-950/40 flex items-center justify-center transition-colors cursor-pointer"
-            title="Cerrar Sesión Administrador"
+            title="Cerrar SesiÃ³n Administrador"
           >
             <LogOut className="w-5 h-5" />
           </button>
@@ -272,7 +272,7 @@ export const AdminUserManagementView: React.FC<AdminUserManagementViewProps> = (
             <button
               onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
               className="lg:hidden p-2 rounded-lg text-[#131b2e] dark:text-white hover:bg-[#eaedff] dark:hover:bg-[#1e293b]"
-              aria-label="Abrir menú"
+              aria-label="Abrir menÃº"
             >
               <Menu className="w-5 h-5" />
             </button>
@@ -281,7 +281,7 @@ export const AdminUserManagementView: React.FC<AdminUserManagementViewProps> = (
               <h1 className="font-headline text-base sm:text-lg font-bold text-[#131b2e] dark:text-white">
                 VoltAcc Retail POS
               </h1>
-              <span className="text-[#dae2fd] dark:text-[#283044] hidden sm:inline">•</span>
+              <span className="text-[#dae2fd] dark:text-[#283044] hidden sm:inline">â€¢</span>
               <span className="text-sm text-[#3f4850] dark:text-slate-400 font-medium hidden sm:inline">
                 Portal Administrador
               </span>
@@ -315,7 +315,7 @@ export const AdminUserManagementView: React.FC<AdminUserManagementViewProps> = (
             <div className="flex items-center gap-1.5 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
               <span className="w-2 h-2 rounded-full bg-emerald-500" />
               <span className="font-mono text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
-                En Línea
+                En LÃ­nea
               </span>
             </div>
 
@@ -342,7 +342,7 @@ export const AdminUserManagementView: React.FC<AdminUserManagementViewProps> = (
               <div className="flex items-center gap-1.5 text-xs font-mono text-[#707881] uppercase tracking-wider">
                 <span>Admin</span>
                 <span>/</span>
-                <span className="text-[#006194] dark:text-[#93ccff] font-semibold">Gestión de Usuarios</span>
+                <span className="text-[#006194] dark:text-[#93ccff] font-semibold">GestiÃ³n de Usuarios</span>
                 <span>/</span>
                 <span className="bg-[#eaedff] dark:bg-[#1a233b] px-1.5 py-0.5 rounded text-[#131b2e] dark:text-white">
                   public.user_profiles
@@ -350,11 +350,11 @@ export const AdminUserManagementView: React.FC<AdminUserManagementViewProps> = (
               </div>
               <div className="flex items-center gap-3 mt-0.5">
                 <h2 className="font-headline text-2xl sm:text-3xl font-bold tracking-tight text-[#131b2e] dark:text-white">
-                  Gestión de Usuarios
+                  GestiÃ³n de Usuarios
                 </h2>
                 <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 font-mono text-[11px] font-semibold">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                  <span>Supabase PostgreSQL • Conectado</span>
+                  <span>Supabase PostgreSQL â€¢ Conectado</span>
                 </div>
               </div>
             </div>
@@ -481,7 +481,7 @@ export const AdminUserManagementView: React.FC<AdminUserManagementViewProps> = (
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Buscar por nombre, email, teléfono o UUID..."
+                placeholder="Buscar por nombre, email, telÃ©fono o UUID..."
                 className="w-full h-10 pl-10 pr-9 rounded-lg bg-[#f2f3ff] dark:bg-[#1a233b] text-[#131b2e] dark:text-white text-xs outline-none focus:bg-white dark:focus:bg-[#131b2e] focus:ring-2 focus:ring-[#007bb9] transition-all placeholder:text-[#707881]"
               />
               {searchQuery && (
@@ -571,39 +571,39 @@ export const AdminUserManagementView: React.FC<AdminUserManagementViewProps> = (
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 font-mono text-[11px]">
                 <div className="p-2 bg-white dark:bg-[#131b2e] rounded border border-[#dae2fd]/40 dark:border-[#283044] flex flex-col">
                   <span className="font-semibold text-[#006194] dark:text-[#93ccff]">id</span>
-                  <span className="text-[#707881] text-[10px]">uuid • PRIMARY • FK</span>
+                  <span className="text-[#707881] text-[10px]">uuid â€¢ PRIMARY â€¢ FK</span>
                 </div>
                 <div className="p-2 bg-white dark:bg-[#131b2e] rounded border border-[#dae2fd]/40 dark:border-[#283044] flex flex-col">
                   <span className="font-semibold">email</span>
-                  <span className="text-[#707881] text-[10px]">text • NON-NULLABLE</span>
+                  <span className="text-[#707881] text-[10px]">text â€¢ NON-NULLABLE</span>
                 </div>
                 <div className="p-2 bg-white dark:bg-[#131b2e] rounded border border-[#dae2fd]/40 dark:border-[#283044] flex flex-col">
                   <span className="font-semibold">first_name, last_name</span>
-                  <span className="text-[#707881] text-[10px]">text • NULLABLE</span>
+                  <span className="text-[#707881] text-[10px]">text â€¢ NULLABLE</span>
                 </div>
                 <div className="p-2 bg-white dark:bg-[#131b2e] rounded border border-[#dae2fd]/40 dark:border-[#283044] flex flex-col">
                   <span className="font-semibold text-indigo-600 dark:text-indigo-400">role</span>
-                  <span className="text-[#707881] text-[10px]">user_role enum • NON-NULL</span>
+                  <span className="text-[#707881] text-[10px]">user_role enum â€¢ NON-NULL</span>
                 </div>
                 <div className="p-2 bg-white dark:bg-[#131b2e] rounded border border-[#dae2fd]/40 dark:border-[#283044] flex flex-col">
                   <span className="font-semibold">branch_id</span>
-                  <span className="text-[#707881] text-[10px]">uuid • NULLABLE</span>
+                  <span className="text-[#707881] text-[10px]">uuid â€¢ NULLABLE</span>
                 </div>
                 <div className="p-2 bg-white dark:bg-[#131b2e] rounded border border-[#dae2fd]/40 dark:border-[#283044] flex flex-col">
                   <span className="font-semibold">phone</span>
-                  <span className="text-[#707881] text-[10px]">text • NULLABLE</span>
+                  <span className="text-[#707881] text-[10px]">text â€¢ NULLABLE</span>
                 </div>
                 <div className="p-2 bg-white dark:bg-[#131b2e] rounded border border-[#dae2fd]/40 dark:border-[#283044] flex flex-col">
                   <span className="font-semibold text-emerald-600 dark:text-emerald-400">status</span>
-                  <span className="text-[#707881] text-[10px]">bool • NON-NULLABLE</span>
+                  <span className="text-[#707881] text-[10px]">bool â€¢ NON-NULLABLE</span>
                 </div>
                 <div className="p-2 bg-white dark:bg-[#131b2e] rounded border border-[#dae2fd]/40 dark:border-[#283044] flex flex-col">
                   <span className="font-semibold">created_at</span>
-                  <span className="text-[#707881] text-[10px]">timestamptz • NON-NULL</span>
+                  <span className="text-[#707881] text-[10px]">timestamptz â€¢ NON-NULL</span>
                 </div>
                 <div className="p-2 bg-white dark:bg-[#131b2e] rounded border border-[#dae2fd]/40 dark:border-[#283044] flex flex-col">
                   <span className="font-semibold">updated_at</span>
-                  <span className="text-[#707881] text-[10px]">timestamptz • NON-NULL</span>
+                  <span className="text-[#707881] text-[10px]">timestamptz â€¢ NON-NULL</span>
                 </div>
                 <div className="p-2 bg-[#cce5ff] dark:bg-[#004b73] rounded flex items-center justify-center text-[#001d31] dark:text-[#cce5ff] font-bold text-[11px]">
                   10 Columnas Totales
@@ -621,7 +621,7 @@ export const AdminUserManagementView: React.FC<AdminUserManagementViewProps> = (
                     <th className="py-3 px-4">Usuario / Identidad Auth</th>
                     <th className="py-3 px-4">Rol (user_role)</th>
                     <th className="py-3 px-4">Sucursal (branch_id)</th>
-                    <th className="py-3 px-4">Teléfono (phone)</th>
+                    <th className="py-3 px-4">TelÃ©fono (phone)</th>
                     <th className="py-3 px-4">Estado (status)</th>
                     <th className="py-3 px-4">Fechas (Timestamps)</th>
                     <th className="py-3 px-4 text-right">Acciones</th>
@@ -633,7 +633,7 @@ export const AdminUserManagementView: React.FC<AdminUserManagementViewProps> = (
                       <td colSpan={7} className="py-12 text-center text-[#707881]">
                         <Users className="w-8 h-8 mx-auto mb-2 opacity-50" />
                         <p className="font-semibold text-sm">No se encontraron usuarios</p>
-                        <p className="text-xs mt-0.5">Intente modificar los filtros o el texto de búsqueda</p>
+                        <p className="text-xs mt-0.5">Intente modificar los filtros o el texto de bÃºsqueda</p>
                       </td>
                     </tr>
                   ) : (
@@ -708,7 +708,7 @@ export const AdminUserManagementView: React.FC<AdminUserManagementViewProps> = (
                           {/* Phone */}
                           <td className="py-3 px-4">
                             <span className="font-mono text-[11px] text-[#707881]">
-                              {u.phone || '—'}
+                              {u.phone || 'â€”'}
                             </span>
                           </td>
 
@@ -769,7 +769,7 @@ export const AdminUserManagementView: React.FC<AdminUserManagementViewProps> = (
               </span>
               <div className="flex items-center gap-3">
                 <span className="font-mono text-[11px] text-[#006194] dark:text-[#93ccff]">
-                  ● Row Level Security (RLS) activo
+                  â— Row Level Security (RLS) activo
                 </span>
               </div>
             </div>
