@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
   Home,
@@ -47,6 +47,7 @@ function POSApp() {
   });
 
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [isCollapsedDesktop, setIsCollapsedDesktop] = useState(false);
   const [activeReceiptTicket, setActiveReceiptTicket] = useState<Ticket | null>(null);
   const [isShortcutsModalOpen, setIsShortcutsModalOpen] = useState(false);
   const [isPriceCheckerOpen, setIsPriceCheckerOpen] = useState(false);
@@ -119,6 +120,14 @@ function POSApp() {
     setCurrentTab(tab);
     window.location.hash = tab;
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleToggleSidebar = () => {
+    if (window.innerWidth >= 1024) {
+      setIsCollapsedDesktop((prev) => !prev);
+    } else {
+      setIsMobileSidebarOpen(true);
+    }
   };
 
   // Keyboard Shortcuts Listener
@@ -198,41 +207,13 @@ function POSApp() {
     );
   }
 
-  // Admin Workspace
-  if (user?.role === 'admin') {
-    if (currentTab === 'admin/home') {
-      return (
-        <AdminHomeDashboardView
-          darkMode={darkMode}
-          onToggleDarkMode={() => setDarkMode(!darkMode)}
-          onNavigate={handleNavigate}
-        />
-      );
-    }
-    if (currentTab === 'admin/backup') {
-      return (
-        <AdminBackupRecoveryView
-          darkMode={darkMode}
-          onToggleDarkMode={() => setDarkMode(!darkMode)}
-          onNavigate={handleNavigate}
-        />
-      );
-    }
-    return (
-      <AdminUserManagementView
-        darkMode={darkMode}
-        onToggleDarkMode={() => setDarkMode(!darkMode)}
-        onNavigate={handleNavigate}
-      />
-    );
-  }
-
   return (
     <div className="min-h-screen bg-[#faf8ff] dark:bg-[#0f172a] text-[#131b2e] dark:text-[#f8fafc] flex flex-col font-body transition-colors duration-200">
       {/* Sidebar Navigation */}
       <Sidebar
         currentTab={currentTab}
         onNavigate={handleNavigate}
+        isCollapsedDesktop={isCollapsedDesktop}
         isOpenMobile={isMobileSidebarOpen}
         onCloseMobile={() => setIsMobileSidebarOpen(false)}
         darkMode={darkMode}
@@ -240,10 +221,11 @@ function POSApp() {
       />
 
       {/* Main App Container */}
-      <div className="lg:pl-72 flex flex-col min-h-screen">
+      <div className={`flex flex-col min-h-screen transition-all duration-300 ${isCollapsedDesktop ? 'lg:pl-20' : 'lg:pl-72'}`}>
         {/* Top Context & Status Bar */}
         <TopBar
-          onToggleSidebar={() => setIsMobileSidebarOpen(true)}
+          onToggleSidebar={handleToggleSidebar}
+          isCollapsedDesktop={isCollapsedDesktop}
           onOpenShortcuts={() => setIsShortcutsModalOpen(true)}
           onOpenPriceChecker={() => setIsPriceCheckerOpen(true)}
           onLockTerminal={() => setIsTerminalLocked(true)}
@@ -253,55 +235,71 @@ function POSApp() {
 
         {/* Dynamic Route Canvas */}
         <main className="flex-1 pt-16 px-4 sm:px-6 py-4 max-w-[1600px] w-full mx-auto">
-          {(currentTab === 'home' || currentTab === 'seller/home') && (
-            <HomeDashboardView onNavigate={handleNavigate} />
+          {/* Admin Views */}
+          {user?.role === 'admin' && (
+            <>
+              {currentTab === 'admin/home' && <AdminHomeDashboardView />}
+              {currentTab === 'admin/users' && <AdminUserManagementView />}
+              {currentTab === 'admin/backup' && <AdminBackupRecoveryView />}
+            </>
           )}
 
-          {currentTab === 'pos' && (
-            <POSTerminalView onOpenReceipt={(ticket) => setActiveReceiptTicket(ticket)} />
-          )}
+          {/* POS & Seller Views */}
+          {user?.role !== 'admin' && (
+            <>
+              {(currentTab === 'home' || currentTab === 'seller/home') && (
+                <HomeDashboardView onNavigate={handleNavigate} />
+              )}
 
-          {currentTab === 'catalog' && (
-            <CatalogStockView onNavigateToPOS={() => handleNavigate('pos')} />
-          )}
+              {currentTab === 'pos' && (
+                <POSTerminalView onOpenReceipt={(ticket) => setActiveReceiptTicket(ticket)} />
+              )}
 
-          {currentTab === 'drawer' && <CashDrawerSettlementView />}
+              {currentTab === 'catalog' && (
+                <CatalogStockView onNavigateToPOS={() => handleNavigate('pos')} />
+              )}
 
-          {currentTab === 'history' && (
-            <SalesHistoryView
-              onOpenReceipt={(ticket) => setActiveReceiptTicket(ticket)}
-              onNavigateToDrawer={() => handleNavigate('drawer')}
-            />
+              {currentTab === 'drawer' && <CashDrawerSettlementView />}
+
+              {currentTab === 'history' && (
+                <SalesHistoryView
+                  onOpenReceipt={(ticket) => setActiveReceiptTicket(ticket)}
+                  onNavigateToDrawer={() => handleNavigate('drawer')}
+                />
+              )}
+            </>
           )}
         </main>
 
-        {/* Mobile Bottom Navigation Bar (Matching Image 11) */}
-        <nav className="fixed bottom-0 left-0 right-0 h-16 bg-[#faf8ff]/95 dark:bg-[#131b2e]/95 backdrop-blur-xl border-t border-[#dae2fd]/60 dark:border-[#283044] z-40 flex items-center justify-around px-2 lg:hidden shadow-lg">
-          {[
-            { id: 'home' as NavigationTab, label: 'Home', icon: Home },
-            { id: 'pos' as NavigationTab, label: 'Venta', icon: Store },
-            { id: 'catalog' as NavigationTab, label: 'CatÃ¡logo', icon: Boxes },
-            { id: 'drawer' as NavigationTab, label: 'Caja', icon: LockKeyhole },
-            { id: 'history' as NavigationTab, label: 'Historial', icon: Receipt },
-          ].map((tab) => {
-            const Icon = tab.icon;
-            const isActive = currentTab === tab.id || (tab.id === 'home' && currentTab === 'seller/home');
-            return (
-              <button
-                key={tab.id}
-                onClick={() => handleNavigate(tab.id)}
-                className={`flex flex-col items-center justify-center flex-1 py-1 transition-colors ${
-                  isActive
-                    ? 'text-[#006194] dark:text-[#93ccff] font-bold'
-                    : 'text-[#707881] dark:text-slate-400'
-                }`}
-              >
-                <Icon className="w-5 h-5" />
-                <span className="text-[10px] mt-0.5 tracking-tight">{tab.label}</span>
-              </button>
-            );
-          })}
-        </nav>
+        {/* Mobile Bottom Navigation Bar (Seller / POS only) */}
+        {user?.role !== 'admin' && (
+          <nav className="fixed bottom-0 left-0 right-0 h-16 bg-[#faf8ff]/95 dark:bg-[#131b2e]/95 backdrop-blur-xl border-t border-[#dae2fd]/60 dark:border-[#283044] z-40 flex items-center justify-around px-2 lg:hidden shadow-lg">
+            {[
+              { id: 'home' as NavigationTab, label: 'Home', icon: Home },
+              { id: 'pos' as NavigationTab, label: 'Venta', icon: Store },
+              { id: 'catalog' as NavigationTab, label: 'Catálogo', icon: Boxes },
+              { id: 'drawer' as NavigationTab, label: 'Caja', icon: LockKeyhole },
+              { id: 'history' as NavigationTab, label: 'Historial', icon: Receipt },
+            ].map((tab) => {
+              const Icon = tab.icon;
+              const isActive = currentTab === tab.id || (tab.id === 'home' && currentTab === 'seller/home');
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => handleNavigate(tab.id)}
+                  className={`flex flex-col items-center justify-center flex-1 py-1 transition-colors ${
+                    isActive
+                      ? 'text-[#006194] dark:text-[#93ccff] font-bold'
+                      : 'text-[#707881] dark:text-slate-400'
+                  }`}
+                >
+                  <Icon className="w-5 h-5" />
+                  <span className="text-[10px] mt-0.5 tracking-tight">{tab.label}</span>
+                </button>
+              );
+            })}
+          </nav>
+        )}
       </div>
 
       {/* Terminal Lock Screen Overlay */}

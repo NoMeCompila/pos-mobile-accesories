@@ -1,12 +1,6 @@
-﻿import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
-  Zap,
-  BarChart3,
-  UserCog,
-  RotateCcw,
-  Sliders,
   Store,
-  Monitor,
   Users,
   ShieldCheck,
   CheckCircle2,
@@ -20,10 +14,6 @@ import {
   Copy,
   Check,
   Edit2,
-  LogOut,
-  Moon,
-  Sun,
-  Menu,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useUsers } from '../services/userStore';
@@ -32,17 +22,13 @@ import { NavigationTab } from '../types/pos';
 import { CreateUserModal } from './CreateUserModal';
 
 interface AdminUserManagementViewProps {
-  darkMode: boolean;
-  onToggleDarkMode: () => void;
-  onNavigate: (tab: NavigationTab) => void;
+  darkMode?: boolean;
+  onToggleDarkMode?: () => void;
+  onNavigate?: (tab: NavigationTab) => void;
 }
 
-export const AdminUserManagementView: React.FC<AdminUserManagementViewProps> = ({
-  darkMode,
-  onToggleDarkMode,
-  onNavigate,
-}) => {
-  const { user, logout } = useAuth();
+export const AdminUserManagementView: React.FC<AdminUserManagementViewProps> = () => {
+  const { user } = useAuth();
   const { users, createUser, updateUser, toggleUserStatus } = useUsers();
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -56,9 +42,6 @@ export const AdminUserManagementView: React.FC<AdminUserManagementViewProps> = (
   const [editingUser, setEditingUser] = useState<UserProfileRecord | null>(null);
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncToast, setSyncToast] = useState<string | null>(null);
-
-  // Mobile drawer state
-  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
   // Copy UUID
   const handleCopyUuid = (uuid: string) => {
@@ -164,7 +147,7 @@ export const AdminUserManagementView: React.FC<AdminUserManagementViewProps> = (
   };
 
   return (
-    <div className="min-h-screen bg-[#faf8ff] dark:bg-[#0b0f19] text-[#131b2e] dark:text-white flex">
+    <div className="w-full px-4 sm:px-8 pb-16 flex-1 max-w-7xl mx-auto">
       {/* Toast Notification */}
       {syncToast && (
         <div className="fixed top-20 right-6 z-50 bg-[#007bb9] text-white px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 text-sm font-medium animate-in fade-in slide-in-from-top-2">
@@ -173,170 +156,7 @@ export const AdminUserManagementView: React.FC<AdminUserManagementViewProps> = (
         </div>
       )}
 
-      {/* Mobile Drawer Overlay */}
-      {isMobileNavOpen && (
-        <div
-          className="fixed inset-0 bg-[#283044]/50 backdrop-blur-xs z-50 lg:hidden"
-          onClick={() => setIsMobileNavOpen(false)}
-        />
-      )}
-
-      {/* Left Icon-Rail Sidebar (80px / w-20) */}
-      <aside
-        className={`fixed left-0 top-0 h-full w-20 bg-white dark:bg-[#131b2e] border-r border-[#dae2fd]/60 dark:border-[#283044] z-50 flex flex-col items-center py-4 shadow-xs transition-transform duration-300 ${
-          isMobileNavOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-        }`}
-      >
-        {/* Brand Logo */}
-        <div className="flex flex-col items-center gap-1.5 w-full pb-4 border-b border-[#dae2fd]/40 dark:border-[#283044] mb-3">
-          <div
-            onClick={() => onNavigate('admin/home')}
-            className="w-10 h-10 rounded-xl bg-[#007bb9] flex items-center justify-center text-white shadow-sm cursor-pointer"
-            title="VoltAcc POS"
-          >
-            <Zap className="w-5 h-5 fill-white" />
-          </div>
-        </div>
-
-        {/* Navigation Icon Rail */}
-        <nav className="flex-1 w-full px-2 flex flex-col items-center gap-2">
-          {/* Tab 1: Resumen y Logs */}
-          <button
-            onClick={() => onNavigate('admin/home')}
-            className="w-12 h-12 flex items-center justify-center rounded-xl text-[#707881] hover:bg-[#eaedff] dark:hover:bg-[#1e293b] hover:text-[#131b2e] dark:hover:text-white transition-all cursor-pointer"
-            title="Resumen y Logs"
-          >
-            <BarChart3 className="w-5 h-5" />
-          </button>
-
-          {/* Active Tab: GestiÃ³n de Usuarios */}
-          <button
-            onClick={() => onNavigate('admin/users')}
-            className="relative w-12 h-12 flex items-center justify-center rounded-xl bg-[#007bb9] text-white font-bold shadow-sm transition-all cursor-pointer"
-            title="GestiÃ³n de Usuarios (Activo)"
-          >
-            <UserCog className="w-5 h-5" />
-            <span className="absolute -left-1 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-[#006194] rounded-r-full" />
-          </button>
-
-          <button
-            className="w-12 h-12 flex items-center justify-center rounded-xl text-[#707881] hover:bg-[#eaedff] dark:hover:bg-[#1e293b] hover:text-[#131b2e] dark:hover:text-white transition-all cursor-pointer"
-            onClick={() => onNavigate('admin/backup')} title="Backup & Restore"
-          >
-            <RotateCcw className="w-5 h-5" />
-          </button>
-
-          <button
-            className="w-12 h-12 flex items-center justify-center rounded-xl text-[#707881] hover:bg-[#eaedff] dark:hover:bg-[#1e293b] hover:text-[#131b2e] dark:hover:text-white transition-all cursor-pointer"
-            title="ConfiguraciÃ³n"
-          >
-            <Sliders className="w-5 h-5" />
-          </button>
-        </nav>
-
-        {/* Bottom Rail Actions */}
-        <div className="flex flex-col items-center gap-3 w-full pt-4 border-t border-[#dae2fd]/40 dark:border-[#283044] mt-auto">
-          {/* DB Ping Dot Indicator */}
-          <div
-            className="w-9 h-9 rounded-xl bg-[#f2f3ff] dark:bg-[#1a233b] flex items-center justify-center text-emerald-600 dark:text-emerald-400 cursor-help"
-            title="Supabase PostgreSQL Conectado (Mock 24ms)"
-          >
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-          </div>
-
-          {/* Dark Mode Toggle */}
-          <button
-            onClick={onToggleDarkMode}
-            className="w-10 h-10 rounded-xl text-[#707881] hover:bg-[#eaedff] dark:hover:bg-[#1e293b] hover:text-[#131b2e] dark:hover:text-white flex items-center justify-center transition-colors cursor-pointer"
-            title="Alternar Modo Oscuro"
-          >
-            {darkMode ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5" />}
-          </button>
-
-          {/* Logout Action */}
-          <button
-            onClick={logout}
-            className="w-10 h-10 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-950/40 flex items-center justify-center transition-colors cursor-pointer"
-            title="Cerrar SesiÃ³n Administrador"
-          >
-            <LogOut className="w-5 h-5" />
-          </button>
-        </div>
-      </aside>
-
-      {/* Main Administrative Container */}
-      <div className="flex-1 flex flex-col min-w-0 lg:pl-20 min-h-screen">
-        {/* Fixed Admin Header */}
-        <header className="fixed top-0 left-0 lg:left-20 right-0 h-16 bg-white/90 dark:bg-[#131b2e]/90 backdrop-blur-xl border-b border-[#dae2fd]/60 dark:border-[#283044] shadow-xs z-40 flex items-center justify-between px-4 sm:px-6">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
-              className="lg:hidden p-2 rounded-lg text-[#131b2e] dark:text-white hover:bg-[#eaedff] dark:hover:bg-[#1e293b]"
-              aria-label="Abrir menÃº"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
-
-            <div className="flex items-center gap-2">
-              <h1 className="font-headline text-base sm:text-lg font-bold text-[#131b2e] dark:text-white">
-                VoltAcc Retail POS
-              </h1>
-              <span className="text-[#dae2fd] dark:text-[#283044] hidden sm:inline">â€¢</span>
-              <span className="text-sm text-[#3f4850] dark:text-slate-400 font-medium hidden sm:inline">
-                Portal Administrador
-              </span>
-            </div>
-            <span className="text-[10px] bg-[#006194] text-white px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider hidden md:inline-block">
-              Super Admin
-            </span>
-          </div>
-
-          <div className="flex items-center gap-3 sm:gap-4">
-            <div className="hidden md:flex items-center gap-2 bg-[#f2f3ff] dark:bg-[#1a233b] px-3 py-1.5 rounded-lg border border-[#dae2fd]/40 dark:border-[#283044]">
-              <Store className="w-4 h-4 text-[#006194] dark:text-[#93ccff]" />
-              <div className="flex flex-col text-left">
-                <span className="text-[9px] font-bold text-[#707881] uppercase tracking-wider">Sucursal</span>
-                <span className="font-mono text-xs text-[#131b2e] dark:text-white font-semibold">
-                  Sucursal Central #01
-                </span>
-              </div>
-            </div>
-
-            <div className="hidden lg:flex items-center gap-2 bg-[#f2f3ff] dark:bg-[#1a233b] px-3 py-1.5 rounded-lg border border-[#dae2fd]/40 dark:border-[#283044]">
-              <Monitor className="w-4 h-4 text-[#006194] dark:text-[#93ccff]" />
-              <div className="flex flex-col text-left">
-                <span className="text-[9px] font-bold text-[#707881] uppercase tracking-wider">Terminal</span>
-                <span className="font-mono text-xs text-[#131b2e] dark:text-white font-semibold">
-                  TERM-MAIN-04
-                </span>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-1.5 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
-              <span className="w-2 h-2 rounded-full bg-emerald-500" />
-              <span className="font-mono text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
-                En LÃ­nea
-              </span>
-            </div>
-
-            {/* Profile Pill */}
-            <div className="flex items-center gap-2.5 pl-2 border-l border-[#dae2fd]/50 dark:border-[#283044]">
-              <div className="flex flex-col text-right hidden sm:flex">
-                <span className="text-xs font-semibold text-[#131b2e] dark:text-white leading-tight">
-                  {user?.displayName || 'Admin root'}
-                </span>
-                <span className="font-mono text-[10px] text-[#707881]">root@voltacc.pos</span>
-              </div>
-              <div className="w-9 h-9 rounded-full bg-[#006194] text-white flex items-center justify-center font-bold text-xs shadow-xs">
-                AR
-              </div>
-            </div>
-          </div>
-        </header>
-
-        {/* Main Body */}
-        <main className="w-full pt-20 px-4 sm:px-8 pb-16 flex-1 max-w-7xl mx-auto">
-          {/* Top Title & Quick Actions */}
+      {/* Top Title & Quick Actions */}
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-1.5 text-xs font-mono text-[#707881] uppercase tracking-wider">
@@ -774,8 +594,6 @@ export const AdminUserManagementView: React.FC<AdminUserManagementViewProps> = (
               </div>
             </div>
           </div>
-        </main>
-      </div>
 
       {/* Create / Edit User Modal */}
       <CreateUserModal

@@ -1,15 +1,8 @@
 import React, { useState } from 'react';
 import {
-  Zap,
-  BarChart3,
-  UserCog,
   RotateCcw,
-  Sliders,
   CheckCircle2,
   Lock,
-  Moon,
-  Sun,
-  Menu,
   X,
   Database,
   Cloud,
@@ -33,9 +26,9 @@ import { NavigationTab } from '../types/pos';
 import { useAuth } from '../context/AuthContext';
 
 interface AdminBackupRecoveryViewProps {
-  darkMode: boolean;
-  onToggleDarkMode: () => void;
-  onNavigate: (tab: NavigationTab) => void;
+  darkMode?: boolean;
+  onToggleDarkMode?: () => void;
+  onNavigate?: (tab: NavigationTab) => void;
 }
 
 interface SnapshotRecord {
@@ -92,18 +85,13 @@ const INITIAL_SNAPSHOTS: SnapshotRecord[] = [
   },
 ];
 
-export const AdminBackupRecoveryView: React.FC<AdminBackupRecoveryViewProps> = ({
-  darkMode,
-  onToggleDarkMode,
-  onNavigate,
-}) => {
+export const AdminBackupRecoveryView: React.FC<AdminBackupRecoveryViewProps> = () => {
   const { user } = useAuth();
 
   // Component states
   const [snapshots, setSnapshots] = useState<SnapshotRecord[]>(INITIAL_SNAPSHOTS);
   const [searchQuery, setSearchQuery] = useState('');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
   // Manual backup form
   const [snapshotReason, setSnapshotReason] = useState(
@@ -217,7 +205,7 @@ export const AdminBackupRecoveryView: React.FC<AdminBackupRecoveryViewProps> = (
   );
 
   return (
-    <div className="min-h-screen bg-[#faf8ff] dark:bg-[#0b101b] text-[#131b2e] dark:text-slate-100 flex font-sans transition-colors duration-200">
+    <div className="flex-1 p-6 space-y-6 max-w-[1600px] w-full mx-auto">
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed top-20 right-6 z-50 bg-[#006194] text-white px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 text-sm font-medium animate-in fade-in slide-in-from-top-2">
@@ -226,158 +214,7 @@ export const AdminBackupRecoveryView: React.FC<AdminBackupRecoveryViewProps> = (
         </div>
       )}
 
-      {/* Mobile Drawer Backdrop */}
-      {isMobileNavOpen && (
-        <div
-          className="fixed inset-0 bg-[#283044]/50 backdrop-blur-xs z-50 lg:hidden"
-          onClick={() => setIsMobileNavOpen(false)}
-        />
-      )}
-
-      {/* Left Icon-Rail Sidebar (w-20 / 80px) */}
-      <aside
-        className={`fixed left-0 top-0 h-full w-20 bg-white dark:bg-[#131b2e] border-r border-[#dae2fd]/60 dark:border-[#283044] z-50 flex flex-col items-center py-4 shadow-xs transition-transform duration-300 ${
-          isMobileNavOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-        }`}
-      >
-        {/* Brand Logo */}
-        <div className="flex flex-col items-center gap-1.5 w-full pb-4 border-b border-[#dae2fd]/40 dark:border-[#283044] mb-3">
-          <div
-            onClick={() => onNavigate('admin/home')}
-            className="w-10 h-10 rounded-xl bg-[#007bb9] flex items-center justify-center text-white shadow-sm cursor-pointer"
-            title="VoltAcc POS"
-          >
-            <Zap className="w-5 h-5 fill-white" />
-          </div>
-        </div>
-
-        {/* Navigation Icon Rail */}
-        <nav className="flex-1 w-full px-2 flex flex-col items-center gap-2">
-          {/* Tab 1: Resumen y Logs */}
-          <button
-            onClick={() => onNavigate('admin/home')}
-            className="w-12 h-12 flex items-center justify-center rounded-xl text-[#707881] hover:bg-[#eaedff] dark:hover:bg-[#1e293b] hover:text-[#131b2e] dark:hover:text-white transition-all cursor-pointer"
-            title="Resumen y Logs"
-          >
-            <BarChart3 className="w-5 h-5" />
-          </button>
-
-          {/* Tab 2: Gestión de Usuarios */}
-          <button
-            onClick={() => onNavigate('admin/users')}
-            className="w-12 h-12 flex items-center justify-center rounded-xl text-[#707881] hover:bg-[#eaedff] dark:hover:bg-[#1e293b] hover:text-[#131b2e] dark:hover:text-white transition-all cursor-pointer"
-            title="Gestión de Usuarios"
-          >
-            <UserCog className="w-5 h-5" />
-          </button>
-
-          {/* Tab 3: Backup & Restore (ACTIVE) */}
-          <button
-            onClick={() => onNavigate('admin/backup')}
-            className="relative w-12 h-12 flex items-center justify-center rounded-xl bg-[#007bb9] text-white font-bold shadow-sm transition-all cursor-pointer"
-            title="Backup & Restore (Activo)"
-          >
-            <RotateCcw className="w-5 h-5" />
-            <span className="absolute -left-1 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-[#006194] rounded-r-full" />
-          </button>
-
-          {/* Tab 4: Configuración */}
-          <button
-            className="w-12 h-12 flex items-center justify-center rounded-xl text-[#707881] hover:bg-[#eaedff] dark:hover:bg-[#1e293b] hover:text-[#131b2e] dark:hover:text-white transition-all cursor-pointer"
-            title="Configuración"
-          >
-            <Sliders className="w-5 h-5" />
-          </button>
-        </nav>
-
-        {/* Bottom Rail Actions */}
-        <div className="flex flex-col items-center gap-3 w-full pt-4 border-t border-[#dae2fd]/40 dark:border-[#283044] mt-auto">
-          <div
-            className="w-9 h-9 rounded-xl bg-[#f2f3ff] dark:bg-[#1a233b] flex items-center justify-center text-emerald-600 dark:text-emerald-400 cursor-help"
-            title="Supabase PostgreSQL Conectado (Mock 24ms)"
-          >
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-          </div>
-
-          <button
-            onClick={onToggleDarkMode}
-            className="w-10 h-10 rounded-xl text-[#707881] hover:bg-[#eaedff] dark:hover:bg-[#1e293b] hover:text-[#131b2e] dark:hover:text-white flex items-center justify-center transition-colors cursor-pointer"
-            title="Alternar Modo Oscuro"
-          >
-            {darkMode ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5" />}
-          </button>
-
-          <div
-            className="w-10 h-10 rounded-full bg-[#006194] text-white flex items-center justify-center font-bold text-xs shadow-sm cursor-pointer"
-            title={`${user?.displayName || 'Admin'} (${user?.role || 'admin'})`}
-          >
-            {user?.displayName ? user.displayName.substring(0, 2).toUpperCase() : 'AD'}
-          </div>
-        </div>
-      </aside>
-
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 lg:pl-20 min-h-screen">
-        {/* Sticky Header */}
-        <header className="sticky top-0 z-30 bg-white/90 dark:bg-[#131b2e]/90 backdrop-blur-xl border-b border-[#dae2fd]/50 dark:border-[#283044] h-16 flex items-center justify-between px-6 shadow-xs">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setIsMobileNavOpen(true)}
-              className="lg:hidden p-2 rounded-lg text-[#707881] hover:bg-[#eaedff] dark:hover:bg-[#1e293b]"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
-            <div className="flex items-center gap-2">
-              <h1 className="font-headline text-lg font-bold text-[#131b2e] dark:text-white tracking-tight">
-                VoltAcc Retail POS
-              </h1>
-              <span className="text-[#dae2fd] dark:text-slate-700 font-bold hidden sm:inline">•</span>
-              <span className="text-xs text-[#707881] dark:text-slate-400 font-medium hidden sm:inline">
-                Portal Administrador
-              </span>
-            </div>
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#006194] text-white hidden md:inline-block">
-              Super Admin
-            </span>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#f2f3ff] dark:bg-[#1e293b] text-xs">
-              <Server className="w-4 h-4 text-[#006194] dark:text-[#93ccff]" />
-              <div className="flex flex-col text-left">
-                <span className="text-[10px] text-[#707881] dark:text-slate-400 uppercase font-semibold">
-                  Sucursal
-                </span>
-                <span className="font-mono text-xs font-semibold text-[#131b2e] dark:text-white">
-                  Central #01
-                </span>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-xs font-semibold">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>DR Engine En Línea</span>
-            </div>
-
-            <div className="flex items-center gap-2.5 pl-2">
-              <div className="text-right hidden sm:block">
-                <p className="text-xs font-bold text-[#131b2e] dark:text-white">
-                  {user?.displayName || 'Admin root'}
-                </p>
-                <p className="text-[10px] font-mono text-[#707881] dark:text-slate-400">
-                  {user?.username || 'root@voltacc.pos'}
-                </p>
-              </div>
-              <div className="w-8 h-8 rounded-full bg-[#006194] text-white flex items-center justify-center font-bold text-xs">
-                {user?.displayName ? user.displayName.substring(0, 2).toUpperCase() : 'AD'}
-              </div>
-            </div>
-          </div>
-        </header>
-
-        {/* Scrollable Main Body */}
-        <main className="flex-1 p-6 space-y-6 max-w-[1600px] w-full mx-auto">
-          {/* Top Context Breadcrumb & Quick Actions */}
+      {/* Top Context Breadcrumb & Quick Actions */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2">
             <div>
               <div className="flex items-center gap-2 font-mono text-xs text-[#707881] dark:text-slate-400 uppercase tracking-wider">
@@ -1191,8 +1028,6 @@ export const AdminBackupRecoveryView: React.FC<AdminBackupRecoveryViewProps> = (
               </div>
             </div>
           </section>
-        </main>
-      </div>
     </div>
   );
 };

@@ -1,14 +1,6 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import {
   Zap,
-  BarChart3,
-  UserCog,
-  RotateCcw,
-  Sliders,
-  LogOut,
-  Moon,
-  Sun,
-  Menu,
   Activity,
   Pause,
   Play,
@@ -41,17 +33,13 @@ import {
 import { AuthEventFilter, AuditTableFilter } from '../types/adminDashboard';
 
 interface AdminHomeDashboardViewProps {
-  darkMode: boolean;
-  onToggleDarkMode: () => void;
-  onNavigate: (tab: NavigationTab) => void;
+  darkMode?: boolean;
+  onToggleDarkMode?: () => void;
+  onNavigate?: (tab: NavigationTab) => void;
 }
 
-export const AdminHomeDashboardView: React.FC<AdminHomeDashboardViewProps> = ({
-  darkMode,
-  onToggleDarkMode,
-  onNavigate,
-}) => {
-  const { user, logout } = useAuth();
+export const AdminHomeDashboardView: React.FC<AdminHomeDashboardViewProps> = () => {
+  const { user } = useAuth();
   const { data: dashboardData, isLoading } = useAdminDashboardData();
   const renewTraMutation = useRenewArcaTraMutation();
   const pingWsfeMutation = usePingArcaWsfeMutation();
@@ -61,7 +49,6 @@ export const AdminHomeDashboardView: React.FC<AdminHomeDashboardViewProps> = ({
   const [authFilter, setAuthFilter] = useState<AuthEventFilter>('ALL');
   const [tableFilter, setTableFilter] = useState<AuditTableFilter>('ALL');
   const [expandedDiffId, setExpandedDiffId] = useState<string | null>('AUD-99240');
-  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [actionFeedback, setActionFeedback] = useState<string | null>(null);
 
   const kpis = dashboardData?.kpis;
@@ -132,159 +119,16 @@ export const AdminHomeDashboardView: React.FC<AdminHomeDashboardViewProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#faf8ff] dark:bg-[#0b101b] text-[#131b2e] dark:text-slate-100 flex flex-col font-sans transition-colors duration-200">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto flex flex-col gap-6">
       {/* Toast Feedback */}
       {actionFeedback && (
-        <div className="fixed top-4 right-4 z-50 bg-[#006194] text-white px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 text-sm font-medium animate-in fade-in slide-in-from-top-2">
+        <div className="fixed top-20 right-6 z-50 bg-[#006194] text-white px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 text-sm font-medium animate-in fade-in slide-in-from-top-2">
           <CheckCircle2 className="w-4 h-4 text-emerald-300" />
           <span>{actionFeedback}</span>
         </div>
       )}
 
-      {/* Mobile Drawer Overlay */}
-      {isMobileNavOpen && (
-        <div
-          className="fixed inset-0 bg-[#283044]/50 backdrop-blur-xs z-50 lg:hidden"
-          onClick={() => setIsMobileNavOpen(false)}
-        />
-      )}
-
-      {/* Left Icon-Rail Sidebar (80px / w-20) */}
-      <aside
-        className={`fixed left-0 top-0 h-full w-20 bg-white dark:bg-[#131b2e] border-r border-[#dae2fd]/60 dark:border-[#283044] z-50 flex flex-col items-center py-4 shadow-xs transition-transform duration-300 ${
-          isMobileNavOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-        }`}
-      >
-        {/* Brand Logo */}
-        <div className="flex flex-col items-center gap-1.5 w-full pb-4 border-b border-[#dae2fd]/40 dark:border-[#283044] mb-3">
-          <div
-            className="w-10 h-10 rounded-xl bg-[#007bb9] flex items-center justify-center text-white shadow-sm cursor-pointer"
-            title="VoltAcc POS"
-            onClick={() => onNavigate('admin/home')}
-          >
-            <Zap className="w-5 h-5 fill-white" />
-          </div>
-        </div>
-
-        {/* Navigation Icon Rail */}
-        <nav className="flex-1 w-full px-2 flex flex-col items-center gap-2">
-          {/* Active Tab: Resumen y Logs */}
-          <button
-            onClick={() => onNavigate('admin/home')}
-            className="relative w-12 h-12 flex items-center justify-center rounded-xl bg-[#007bb9] text-white font-bold shadow-sm transition-all cursor-pointer"
-            title="Resumen y Logs (Activo)"
-          >
-            <BarChart3 className="w-5 h-5" />
-            <span className="absolute -left-1 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-[#006194] rounded-r-full" />
-          </button>
-
-          {/* Tab 2: GestiÃ³n de Usuarios */}
-          <button
-            onClick={() => onNavigate('admin/users')}
-            className="w-12 h-12 flex items-center justify-center rounded-xl text-[#707881] hover:bg-[#eaedff] dark:hover:bg-[#1e293b] hover:text-[#131b2e] dark:hover:text-white transition-all cursor-pointer"
-            title="GestiÃ³n de Usuarios"
-          >
-            <UserCog className="w-5 h-5" />
-          </button>
-
-          <button
-            className="w-12 h-12 flex items-center justify-center rounded-xl text-[#707881] hover:bg-[#eaedff] dark:hover:bg-[#1e293b] hover:text-[#131b2e] dark:hover:text-white transition-all cursor-pointer"
-            title="Backup & Restore (PrÃ³ximamente)"
-          >
-            <RotateCcw className="w-5 h-5" />
-          </button>
-
-          <button
-            className="w-12 h-12 flex items-center justify-center rounded-xl text-[#707881] hover:bg-[#eaedff] dark:hover:bg-[#1e293b] hover:text-[#131b2e] dark:hover:text-white transition-all cursor-pointer"
-            title="ConfiguraciÃ³n (PrÃ³ximamente)"
-          >
-            <Sliders className="w-5 h-5" />
-          </button>
-        </nav>
-
-        {/* Bottom Rail Actions */}
-        <div className="flex flex-col items-center gap-3 w-full pt-4 border-t border-[#dae2fd]/40 dark:border-[#283044] mt-auto">
-          {/* DB Ping Dot Indicator */}
-          <div
-            className="w-9 h-9 rounded-xl bg-[#f2f3ff] dark:bg-[#1a233b] flex items-center justify-center text-emerald-600 dark:text-emerald-400 cursor-help"
-            title="Supabase PostgreSQL Conectado (Mock 28ms)"
-          >
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-          </div>
-
-          {/* Dark Mode Toggle */}
-          <button
-            onClick={onToggleDarkMode}
-            className="w-10 h-10 rounded-xl text-[#707881] hover:bg-[#eaedff] dark:hover:bg-[#1e293b] hover:text-[#131b2e] dark:hover:text-white flex items-center justify-center transition-colors cursor-pointer"
-            title="Alternar Modo Oscuro"
-          >
-            {darkMode ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5" />}
-          </button>
-
-          {/* Logout Action */}
-          <button
-            onClick={logout}
-            className="w-10 h-10 rounded-xl text-[#ba1a1a] dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 flex items-center justify-center transition-colors cursor-pointer"
-            title="Cerrar SesiÃ³n"
-          >
-            <LogOut className="w-5 h-5" />
-          </button>
-
-          {/* Admin Avatar */}
-          <div
-            className="w-10 h-10 rounded-full bg-[#006194] flex items-center justify-center text-white text-xs font-bold ring-2 ring-emerald-500 cursor-default"
-            title={`Administrador: ${user?.username || 'admin'}`}
-          >
-            AD
-          </div>
-        </div>
-      </aside>
-
-      {/* Main Layout Area (offset for 80px sidebar on lg) */}
-      <div className="lg:pl-20 flex-1 flex flex-col min-w-0">
-        {/* Top Header */}
-        <header className="h-16 bg-white dark:bg-[#131b2e] border-b border-[#dae2fd]/60 dark:border-[#283044] px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setIsMobileNavOpen(true)}
-              className="lg:hidden p-2 rounded-xl text-[#707881] hover:bg-[#eaedff] dark:hover:bg-[#1e293b]"
-              title="Abrir MenÃº"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-base sm:text-lg text-[#006194] dark:text-[#93ccff] tracking-tight">
-                Humans In The Loop
-              </span>
-              <span className="text-xs text-[#707881] dark:text-slate-400 hidden sm:inline">
-                â€¢ POS & Backoffice
-              </span>
-            </div>
-            <span className="px-2 py-0.5 rounded-md bg-[#dae2fd] dark:bg-[#1e293b] text-[#006194] dark:text-[#93ccff] text-[11px] font-bold tracking-wider">
-              PROD â€¢ SUPABASE
-            </span>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-2 text-xs text-[#707881] dark:text-slate-400">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Observabilidad en tiempo real</span>
-            </div>
-            <div className="h-4 w-px bg-slate-200 dark:bg-slate-700 hidden sm:block" />
-            <div className="text-right">
-              <span className="block text-xs font-semibold text-[#131b2e] dark:text-white">
-                {user?.displayName || 'Administrador Root'}
-              </span>
-              <span className="block text-[11px] text-[#707881] dark:text-slate-400">
-                Rol: Administrador
-              </span>
-            </div>
-          </div>
-        </header>
-
-        {/* Content Container */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto flex flex-col gap-6">
-          {/* Sub-header / Status Bar */}
+      {/* Sub-header / Status Bar */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200/80 dark:border-slate-800">
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#131b2e] dark:text-white">
@@ -908,8 +752,6 @@ export const AdminHomeDashboardView: React.FC<AdminHomeDashboardViewProps> = ({
               </table>
             </div>
           </section>
-        </main>
-      </div>
     </div>
   );
 };
