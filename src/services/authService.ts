@@ -21,6 +21,14 @@ const DEFAULT_ADMIN_PROFILE: UserProfile = {
   terminalId: 'TERM-MAIN-04',
 };
 
+const DEFAULT_MANAGER_PROFILE: UserProfile = {
+  id: 'usr-manager-01',
+  username: 'gerente',
+  displayName: 'Martín Gerente Comercial',
+  role: 'manager',
+  terminalId: 'TERM-MGR-01',
+};
+
 export class MockAuthService implements IAuthService {
   async login(credentials: LoginCredentials): Promise<AuthSession> {
     const { identifier, passKey, rememberDevice } = credentials;
@@ -39,6 +47,19 @@ export class MockAuthService implements IAuthService {
     if (cleanUser === 'admin' && cleanPass === '123') {
       const session: AuthSession = {
         user: DEFAULT_ADMIN_PROFILE,
+        token: `mock-pos-jwt-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
+        expiresAt: Date.now() + 12 * 60 * 60 * 1000, // 12 hours
+        rememberDevice,
+      };
+
+      this.saveSession(session, rememberDevice);
+      return session;
+    }
+
+    // Default manager credentials check: gerente / 123
+    if (cleanUser === 'gerente' && cleanPass === '123') {
+      const session: AuthSession = {
+        user: DEFAULT_MANAGER_PROFILE,
         token: `mock-pos-jwt-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
         expiresAt: Date.now() + 12 * 60 * 60 * 1000, // 12 hours
         rememberDevice,

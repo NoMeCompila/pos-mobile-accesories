@@ -12,6 +12,9 @@ import {
   BarChart3,
   UserCog,
   RotateCcw,
+  TrendingUp,
+  BarChart2,
+  Truck,
 } from 'lucide-react';
 import { NavigationTab } from '../types/pos';
 import { UserRole } from '../types/auth';
@@ -26,21 +29,27 @@ export interface NavigationItem {
 }
 
 export const NAV_ITEMS: NavigationItem[] = [
-  // Admin routes
+  // Manager routes
+  { id: 'manager/home', label: 'Control Comercial', icon: TrendingUp, roles: ['manager'] },
+  { id: 'manager/sales-bi', label: 'Reportes BI', icon: BarChart2, roles: ['manager'] },
+  { id: 'manager/suppliers', label: 'Proveedores e Insumos', icon: Truck, roles: ['manager'] },
+  // Admin & Manager routes
+  { id: 'admin/users', label: 'Gestión de Personal', icon: UserCog, roles: ['admin', 'manager'] },
+  // Reused Catalog & POS for Manager & Cashier
+  { id: 'catalog', label: 'Catálogo y Stock', icon: Boxes, roles: ['seller', 'cashier', 'manager', 'technician'] },
+  { id: 'pos', label: 'Terminal de Venta', icon: Store, roles: ['seller', 'cashier', 'manager'] },
+  // Admin-only routes
   { id: 'admin/home', label: 'Resumen y Logs', icon: BarChart3, roles: ['admin'] },
-  { id: 'admin/users', label: 'Gestión de Usuarios', icon: UserCog, roles: ['admin'] },
   { id: 'admin/backup', label: 'Backup & Recovery', icon: RotateCcw, roles: ['admin'] },
   // POS & Seller routes
   {
     id: 'home',
     label: 'Home',
     icon: Home,
-    roles: ['seller', 'cashier', 'manager', 'technician', 'customer'],
+    roles: ['seller', 'cashier', 'technician', 'customer'],
   },
-  { id: 'pos', label: 'Terminal de Venta', icon: Store, roles: ['seller', 'cashier', 'manager'] },
-  { id: 'catalog', label: 'Catálogo y Stock', icon: Boxes, roles: ['seller', 'cashier', 'manager', 'technician'] },
-  { id: 'drawer', label: 'Apertura/cierre de Caja', icon: LockKeyhole, roles: ['seller', 'cashier', 'manager'] },
-  { id: 'history', label: 'Historial de Mis Ventas', icon: Receipt, roles: ['seller', 'cashier', 'manager'] },
+  { id: 'drawer', label: 'Apertura/cierre de Caja', icon: LockKeyhole, roles: ['seller', 'cashier'] },
+  { id: 'history', label: 'Historial de Mis Ventas', icon: Receipt, roles: ['seller', 'cashier'] },
 ];
 
 export interface SidebarProps {
@@ -104,7 +113,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           >
             <div className="flex items-center gap-2.5">
               <div
-                onClick={() => handleSelect(userRole === 'admin' ? 'admin/home' : 'home')}
+                onClick={() => handleSelect(userRole === 'admin' ? 'admin/home' : userRole === 'manager' ? 'manager/home' : 'home')}
                 className="w-10 h-10 rounded-xl bg-[#007bb9] flex items-center justify-center text-white shadow-sm cursor-pointer shrink-0"
                 title="VoltAcc POS"
               >
@@ -115,7 +124,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   VoltAcc
                 </span>
                 <span className="text-[11px] font-bold text-[#006194] dark:text-[#93ccff] uppercase tracking-wider mt-0.5">
-                  {userRole === 'admin' ? 'Portal Admin' : 'Retail POS'}
+                  {userRole === 'admin' ? 'Portal Admin' : userRole === 'manager' ? 'Portal Gerente' : 'Retail POS'}
                 </span>
               </div>
             </div>
@@ -189,7 +198,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#006947]"></span>
                 </span>
                 <span className="text-xs font-semibold text-[#131b2e] dark:text-slate-200">
-                  {userRole === 'admin' ? 'Consola Central • Super Admin' : 'Caja 02 • Turno Activo'}
+                  {userRole === 'admin'
+                    ? 'Consola Central • Super Admin'
+                    : userRole === 'manager'
+                    ? 'Consola Comercial • Gerente'
+                    : 'Caja 02 • Turno Activo'}
                 </span>
               </div>
               <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#6ffbbe] text-[#002113] uppercase tracking-wide">
@@ -199,10 +212,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
             <div className="flex items-center justify-between pt-1 border-t border-[#dae2fd]/60 dark:border-slate-700 text-xs">
               <span className="font-mono-num text-[11px] text-[#3f4850] dark:text-slate-400">
-                {userRole === 'admin' ? 'Terminal Root' : 'Terminal Node #02'}
+                {userRole === 'admin'
+                  ? 'Terminal Root'
+                  : userRole === 'manager'
+                  ? 'Consola Gerencial #01'
+                  : 'Terminal Node #02'}
               </span>
               <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#dae2fd] dark:bg-slate-700 text-[#131b2e] dark:text-slate-200 uppercase">
-                {userRole === 'admin' ? 'ADMIN' : 'POS'}
+                {userRole === 'admin' ? 'ADMIN' : userRole === 'manager' ? 'GERENTE' : 'POS'}
               </span>
             </div>
 

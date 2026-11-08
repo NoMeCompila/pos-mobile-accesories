@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-background" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kinetic POS - Panel de Control Gerencial</title>
+<!-- Google Fonts: Space Grotesk, Hanken Grotesk, JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "inverse-primary": "#93ccff",
+            "surface-bright": "#faf8ff",
+            "surface-dim": "#d2d9f4",
+            "on-secondary-container": "#fefcff",
+            "secondary": "#0051d5",
+            "on-primary-fixed": "#001d31",
+            "on-secondary-fixed-variant": "#003ea8",
+            "on-error": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "tertiary-fixed-dim": "#4edea3",
+            "error": "#ba1a1a",
+            "on-tertiary-container": "#f5fff6",
+            "secondary-fixed-dim": "#b4c5ff",
+            "primary": "#006194",
+            "on-surface-variant": "#3f4850",
+            "surface": "#faf8ff",
+            "surface-tint": "#006398",
+            "on-primary": "#ffffff",
+            "inverse-surface": "#283044",
+            "surface-container-low": "#f2f3ff",
+            "surface-container-high": "#e2e7ff",
+            "primary-fixed": "#cce5ff",
+            "on-primary-container": "#fdfcff",
+            "surface-container": "#eaedff",
+            "on-primary-fixed-variant": "#004b73",
+            "on-error-container": "#93000a",
+            "secondary-container": "#316bf3",
+            "primary-container": "#007bb9",
+            "on-surface": "#131b2e",
+            "outline-variant": "#bfc7d2",
+            "on-secondary": "#ffffff",
+            "tertiary-container": "#00855b",
+            "outline": "#707881",
+            "error-container": "#ffdad6",
+            "background": "#faf8ff",
+            "on-tertiary-fixed": "#002113",
+            "tertiary-fixed": "#6ffbbe",
+            "on-tertiary-fixed-variant": "#005236",
+            "on-background": "#131b2e",
+            "on-tertiary": "#ffffff",
+            "surface-variant": "#dae2fd",
+            "secondary-fixed": "#dbe1ff",
+            "on-secondary-fixed": "#00174b",
+            "primary-fixed-dim": "#93ccff",
+            "tertiary": "#006947",
+            "surface-container-highest": "#dae2fd",
+            "inverse-on-surface": "#eef0ff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline": ["Space Grotesk", "sans-serif"],
+            "display": ["Space Grotesk", "sans-serif"],
+            "body": ["Hanken Grotesk", "sans-serif"],
+            "label": ["JetBrains Mono", "monospace"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .material-symbols-fill {
+      font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+    }
+    /* Custom subtle pulse for fiscal live link */
+    @keyframes pulse-subtle {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.15); }
+    }
+    .pulse-dot {
+      animation: pulse-subtle 2s infinite ease-in-out;
+    }
+  </style>
+<meta content="web_dashboard" name="shell-type"/></head>
+<body class="bg-background text-on-surface font-body antialiased flex min-h-screen">
+<!-- ========================================================================= -->
+<!-- SIDEBAR NAVIGATION (Derived from Shared Components JSON: SideNavBar)       -->
+<!-- ========================================================================= -->
+<aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-low border-r border-outline-variant/30 z-40 flex flex-col justify-between select-none"><div class="flex flex-col"><div class="h-16 px-4 flex items-center gap-2 bg-surface-container-low border-b border-outline-variant/20"><div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center text-on-primary-container shadow-sm"><span class="material-symbols-outlined text-[24px]">bolt</span></div><div class="flex flex-col"><span class="font-headline text-lg tracking-tight text-on-surface font-bold leading-none">VoltAcc</span><span class="text-[11px] font-bold text-primary uppercase tracking-wider">Retail POS</span></div></div><div class="p-3"><button class="w-full h-10 flex items-center justify-center gap-2 bg-primary hover:bg-primary-container text-on-primary rounded-lg font-semibold text-xs active:scale-[0.98] transition-all shadow-sm"><span class="material-symbols-outlined text-base">barcode_scanner</span><span class="">Quick Scan (F1)</span></button></div><nav class="flex flex-col gap-1 px-3"><a class="flex items-center gap-3 px-3 h-11 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" href="#home"><span class="material-symbols-outlined text-[20px]">home</span><span class="text-sm font-medium">Home</span></a><a class="flex items-center gap-3 px-3 h-11 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" href="#usuarios"><span class="material-symbols-outlined text-[20px]">group</span><span class="text-sm font-medium">Usuarios</span></a><a class="flex items-center gap-3 px-3 h-11 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" href="#inventario"><span class="material-symbols-outlined text-[20px]">inventory_2</span><span class="text-sm font-medium">Inventario y Stock</span></a><a class="flex items-center gap-3 px-3 h-11 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" href="#proveedores"><span class="material-symbols-outlined text-[20px]">local_shipping</span><span class="text-sm font-medium">Proveedores</span></a><a class="flex items-center gap-3 px-3 h-11 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" href="#reportes"><span class="material-symbols-outlined text-[20px]">bar_chart</span><span class="text-sm font-medium">Reportes</span></a><a class="flex items-center gap-3 px-3 h-11 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" href="#venta"><span class="material-symbols-outlined text-[20px]">point_of_sale</span><span class="text-sm font-medium">Venta</span></a></nav></div><div class="p-3 m-3 bg-surface-container rounded-xl flex flex-col gap-2 border border-outline-variant/30"><div class="flex items-center justify-between"><div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-tertiary animate-pulse"></span><span class="text-xs font-semibold text-on-surface">Caja 04 • Turno Activo</span></div><span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed uppercase">Online</span></div><div class="flex items-center justify-between pt-1 border-t border-outline-variant/20"><span class="font-label text-[11px] text-on-surface-variant">Terminal Admin #04</span><span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-surface-container-highest text-on-surface">POS</span></div></div></aside>
+<!-- ========================================================================= -->
+<!-- MAIN WORKSPACE CANVAS                                                    -->
+<!-- ========================================================================= -->
+<div class="flex-1 flex flex-col ml-64 min-w-0">
+<!-- TOPBAR NAVIGATION (Derived from Shared Components JSON: TopNavBar) -->
+<header class="sticky top-0 z-30 bg-surface dark:bg-inverse-surface border-b border-outline-variant/30 dark:border-outline/20 shadow-sm flex items-center justify-between px-6 py-3"><div class="flex items-center gap-6"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-primary"><span class="material-symbols-outlined text-[20px]">store</span></div><div class="flex flex-col"><div class="flex items-center gap-2"><span class="font-headline text-sm font-bold text-on-surface tracking-tight">Downtown Flagship</span><span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span><span class="text-[11px] font-label text-on-surface-variant">Term #02</span></div><span class="text-[11px] text-on-surface-variant">Central Metropolitan Branch</span></div></div><div class="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container border border-outline-variant/30"><span class="text-[11px] text-on-surface-variant font-medium">Float:</span><span class="font-label text-xs font-bold text-on-surface">$250.00 ARS</span></div></div><div class="flex items-center gap-3"><div class="flex items-center gap-1 text-on-surface-variant"><button class="w-9 h-9 rounded-lg hover:bg-surface-container flex items-center justify-center transition-colors" title="Scan Barcode"><span class="material-symbols-outlined text-[20px]">qr_code_scanner</span></button><button class="w-9 h-9 rounded-lg hover:bg-surface-container flex items-center justify-center transition-colors" title="Search"><span class="material-symbols-outlined text-[20px]">search</span></button><button class="w-9 h-9 rounded-lg hover:bg-surface-container flex items-center justify-center transition-colors" title="Lock Register"><span class="material-symbols-outlined text-[20px]">lock</span></button><button class="w-9 h-9 rounded-lg hover:bg-surface-container flex items-center justify-center transition-colors" title="Help"><span class="material-symbols-outlined text-[20px]">help_outline</span></button></div><div class="h-5 w-px bg-outline-variant/30 hidden sm:block"></div><div class="flex items-center gap-2.5 pl-1"><div class="flex flex-col text-right hidden sm:flex"><span class="text-xs font-bold text-on-surface font-headline leading-tight">E. Harrison</span><span class="text-[10px] text-on-surface-variant leading-tight">Cashier</span></div><div class="w-9 h-9 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-bold text-xs shadow-sm border border-primary-fixed-dim"><span class="material-symbols-outlined text-base">person</span></div></div></div></header>
+<!-- MAIN SCROLLABLE CONTENT BODY -->
+<main class="flex-1 p-6 space-y-6 max-w-[1600px] w-full mx-auto"><div class="flex flex-col w-full">
+<!-- Active Navigation Sync for Shell (Proveedores Tab Highlight) -->
+<script>
+    (function syncSidebarActiveState() {
+      try {
+        const navLinks = document.querySelectorAll('aside nav a');
+        navLinks.forEach(link => {
+          if (link.getAttribute('href') === '#proveedores') {
+            link.className = 'flex items-center gap-3 px-3 h-11 rounded-lg bg-primary-container text-on-primary-container font-semibold transition-all shadow-sm';
+            const icon = link.querySelector('.material-symbols-outlined');
+            if (icon) icon.className = 'material-symbols-outlined text-[20px] text-on-primary-container';
+          } else {
+            link.className = 'flex items-center gap-3 px-3 h-11 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all';
+            const icon = link.querySelector('.material-symbols-outlined');
+            if (icon) icon.className = 'material-symbols-outlined text-[20px]';
+          }
+        });
+      } catch (e) {
+        /* safety sync */
+      }
+    })();
+  </script>
+<!-- ========================================================================= -->
+<!-- HEADER OPERATIVO & ACCIONES GERENCIALES                                   -->
+<!-- ========================================================================= -->
+<div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
+<div class="flex flex-col">
+<div class="flex items-center gap-2 mb-1">
+<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wider uppercase bg-primary-fixed text-on-primary-fixed font-label">
+          PROCURING &amp; SUPPLY CHAIN
+        </span>
+<span class="text-xs text-on-surface-variant font-label">Módulo #PRV-09</span>
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+<span class="text-xs text-tertiary font-semibold">ARCA Regla 1415 Sincronizada</span>
+</div>
+<h1 class="font-headline text-3xl sm:text-4xl font-bold tracking-tight text-on-surface">
+        Gestión de Proveedores e Insumos
+      </h1>
+<p class="text-sm text-on-surface-variant mt-0.5">
+        Aprovisionamiento de mercadería de reventa, insumos de servicio técnico y consumibles de terminal POS.
+      </p>
+</div>
+<!-- Quick Action Bar -->
+<div class="flex flex-wrap items-center gap-2.5">
+<button class="h-11 px-4 rounded-lg bg-primary text-on-primary hover:bg-primary-container font-semibold text-xs flex items-center gap-2 shadow-sm transition-transform active:scale-95" onclick="openModal('modal-nuevo-proveedor')">
+<span class="material-symbols-outlined text-lg">person_add</span>
+<span>+ Nuevo Proveedor</span>
+</button>
+<button class="h-11 px-4 rounded-lg bg-secondary text-on-secondary hover:bg-secondary-container font-semibold text-xs flex items-center gap-2 shadow-sm transition-transform active:scale-95" onclick="switchTab('tab-ingreso-compras')">
+<span class="material-symbols-outlined text-lg">post_add</span>
+<span>Ingresar Factura / Remito</span>
+</button>
+<button class="h-11 px-3.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-semibold text-xs flex items-center gap-2 shadow-sm transition-colors" onclick="switchTab('tab-reposicion-alerta')">
+<span class="material-symbols-outlined text-lg text-tertiary">notifications_active</span>
+<span class="relative">
+          Reposición Urgente
+          <span class="absolute -top-1 -right-2 w-2 h-2 rounded-full bg-error animate-ping"></span>
+</span>
+</button>
+<button class="h-11 w-11 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface-variant flex items-center justify-center transition-colors shadow-sm" title="Exportar Catálogo CSV / XLS">
+<span class="material-symbols-outlined text-[20px]">file_download</span>
+</button>
+</div>
+</div>
+<!-- ========================================================================= -->
+<!-- 1. METRICAS SUPERIORES / KPI CARDS DE PROVEEDORES                         -->
+<!-- ========================================================================= -->
+<section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+<!-- KPI 1: Deuda Total en Cta. Cte. -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Deuda Total Cta. Cte.</span>
+<span class="font-label text-2xl lg:text-3xl font-bold text-error mt-1 tracking-tight">
+            $1,420,500 <span class="text-xs font-normal text-on-surface-variant">ARS</span>
+</span>
+</div>
+<div class="w-10 h-10 rounded-lg bg-error-container text-on-error-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[22px]">account_balance_wallet</span>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between text-xs bg-surface-container-low -mx-4 -mb-4 px-4 py-2.5">
+<div class="flex items-center gap-1.5 text-error font-medium">
+<span class="material-symbols-outlined text-base">warning</span>
+<span>4 vencimientos &lt; 7 días</span>
+</div>
+<button class="text-primary hover:underline font-semibold font-label text-[11px]" onclick="switchTab('tab-cuentas-corrientes')">
+          Ver Pagos →
+        </button>
+</div>
+</div>
+<!-- KPI 2: Reposiciones Urgentes -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Reposición Urgente</span>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-label text-2xl lg:text-3xl font-bold text-on-surface">8</span>
+<span class="text-xs font-semibold text-error px-2 py-0.5 rounded-full bg-error-container">Crítico &lt; Min</span>
+</div>
+</div>
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest text-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[22px]">production_quantity_limits</span>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between text-xs bg-surface-container-low -mx-4 -mb-4 px-4 py-2.5">
+<span class="text-on-surface-variant">5 accesorios / 3 insumos POS</span>
+<button class="text-primary hover:underline font-semibold font-label text-[11px]" onclick="switchTab('tab-reposicion-alerta')">
+          Generar Pedido →
+        </button>
+</div>
+</div>
+<!-- KPI 3: Compras del Mes Registradas -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Compras Registradas (Mes)</span>
+<span class="font-label text-2xl lg:text-3xl font-bold text-primary mt-1 tracking-tight">
+            $3,890,000 <span class="text-xs font-normal text-on-surface-variant">ARS</span>
+</span>
+</div>
+<div class="w-10 h-10 rounded-lg bg-primary-fixed text-on-primary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-[22px]">receipt_long</span>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between text-xs bg-surface-container-low -mx-4 -mb-4 px-4 py-2.5">
+<span class="text-on-surface-variant font-label">24 facturas / remitos cargados</span>
+<span class="text-tertiary font-semibold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-sm">trending_up</span>+12.4%
+        </span>
+</div>
+</div>
+<!-- KPI 4: Directorio de Proveedores -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Proveedores Homologados</span>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-label text-2xl lg:text-3xl font-bold text-on-surface">18</span>
+<span class="text-xs font-medium text-tertiary px-2 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed">2 Inactivos</span>
+</div>
+</div>
+<div class="w-10 h-10 rounded-lg bg-surface-container-high text-on-surface flex items-center justify-center">
+<span class="material-symbols-outlined text-[22px]">hub</span>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between text-xs bg-surface-container-low -mx-4 -mb-4 px-4 py-2.5">
+<span class="text-on-surface-variant">6 preventistas con visita semanal</span>
+<span class="font-label text-[11px] text-secondary font-semibold">100% CUIT Valid</span>
+</div>
+</div>
+</section>
+<!-- ========================================================================= -->
+<!-- 2. TABS O VISTAS RÁPIDAS DE TRABAJO                                       -->
+<!-- ========================================================================= -->
+<div class="bg-surface-container-low p-1.5 rounded-xl flex flex-wrap gap-1.5 mb-6 shadow-sm">
+<button class="tab-btn px-4 py-2.5 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all bg-surface-container-lowest text-primary shadow-sm" id="btn-tab-ficha-maestra" onclick="switchTab('tab-ficha-maestra')">
+<span class="material-symbols-outlined text-base">storefront</span>
+<span>1. Ficha Maestra &amp; Directorio ABM</span>
+<span class="px-1.5 py-0.2 rounded-full text-[10px] font-label font-bold bg-primary-fixed text-on-primary-fixed">18</span>
+</button>
+<button class="tab-btn px-4 py-2.5 rounded-lg text-xs font-medium flex items-center gap-2 transition-all text-on-surface-variant hover:text-on-surface hover:bg-surface-container" id="btn-tab-ingreso-compras" onclick="switchTab('tab-ingreso-compras')">
+<span class="material-symbols-outlined text-base">input</span>
+<span>2. Ingreso de Compras &amp; Remitos</span>
+</button>
+<button class="tab-btn px-4 py-2.5 rounded-lg text-xs font-medium flex items-center gap-2 transition-all text-on-surface-variant hover:text-on-surface hover:bg-surface-container" id="btn-tab-cuentas-corrientes" onclick="switchTab('tab-cuentas-corrientes')">
+<span class="material-symbols-outlined text-base">payments</span>
+<span>3. Cuentas Corrientes &amp; Caja POS</span>
+<span class="px-1.5 py-0.2 rounded-full text-[10px] font-label font-bold bg-error-container text-on-error-container">4 Pend.</span>
+</button>
+<button class="tab-btn px-4 py-2.5 rounded-lg text-xs font-medium flex items-center gap-2 transition-all text-on-surface-variant hover:text-on-surface hover:bg-surface-container" id="btn-tab-reposicion-alerta" onclick="switchTab('tab-reposicion-alerta')">
+<span class="material-symbols-outlined text-base">bolt</span>
+<span>4. Alerta Reposición &amp; WhatsApp</span>
+<span class="px-1.5 py-0.2 rounded-full text-[10px] font-label font-bold bg-tertiary-fixed text-on-tertiary-fixed">8 Urg.</span>
+</button>
+</div>
+<!-- ========================================================================= -->
+<!-- TAB 1: FICHA MAESTRA & DIRECTORIO ABM (Activo por defecto)                 -->
+<!-- ========================================================================= -->
+<div class="tab-content block space-y-6" id="tab-ficha-maestra">
+<!-- Toolbar de Búsqueda y Filtros -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3">
+<div class="flex-1 flex flex-col sm:flex-row items-center gap-2.5">
+<div class="relative w-full sm:w-80">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+<input class="w-full h-11 pl-10 pr-4 rounded-lg bg-surface-container-low text-xs text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary font-body" id="filter-proveedores" placeholder="Buscar por Razón Social, CUIT, Preventista o SKU..." type="text"/>
+</div>
+<div class="flex items-center gap-2 w-full sm:w-auto">
+<select class="h-11 px-3 rounded-lg bg-surface-container-low text-xs text-on-surface font-medium focus:outline-none focus:ring-2 focus:ring-primary flex-1 sm:flex-initial">
+<option value="todos">Todos los Rubros</option>
+<option value="accesorios">Accesorios Telefonía</option>
+<option value="tecnico">Insumos Técnicos / Taller</option>
+<option value="papeleria">Papelería &amp; Rollos POS</option>
+<option value="embalaje">Embalajes &amp; Bolsas</option>
+</select>
+<select class="h-11 px-3 rounded-lg bg-surface-container-low text-xs text-on-surface font-medium focus:outline-none focus:ring-2 focus:ring-primary">
+<option value="todos">Todos los Estados</option>
+<option value="activos">Solo Activos</option>
+<option value="con-deuda">Con Saldo Pendiente</option>
+<option value="visita-hoy">Visita Hoy / Esta Semana</option>
+</select>
+</div>
+</div>
+<div class="flex items-center gap-2 justify-end">
+<span class="text-xs text-on-surface-variant font-label">Mostrando 4 de 18 registros</span>
+</div>
+</div>
+<!-- Tabla Maestra de Proveedores -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant font-label text-[11px] uppercase tracking-wider select-none">
+<th class="py-3.5 px-4 font-semibold">Proveedor &amp; Razón Social</th>
+<th class="py-3.5 px-4 font-semibold">Identificación / Fiscal</th>
+<th class="py-3.5 px-4 font-semibold">Preventista &amp; Contacto</th>
+<th class="py-3.5 px-4 font-semibold">Frecuencia / Visita</th>
+<th class="py-3.5 px-4 font-semibold">Rubro Principal</th>
+<th class="py-3.5 px-4 font-semibold text-right">Saldo Cta. Cte.</th>
+<th class="py-3.5 px-4 font-semibold text-center">Estado</th>
+<th class="py-3.5 px-4 font-semibold text-center">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container text-xs">
+<!-- Row 1: Distribuidora Norte -->
+<tr class="hover:bg-surface-container-low/70 transition-colors group">
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-bold text-sm font-headline">
+                    DN
+                  </div>
+<div class="flex flex-col">
+<span class="font-bold text-on-surface text-sm font-headline group-hover:text-primary transition-colors">Distribuidora Norte S.R.L.</span>
+<span class="text-[11px] text-on-surface-variant">Nombre Fantasía: El Mayorista Tech</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col gap-1">
+<span class="font-label text-xs font-semibold text-on-surface">30-71449812-4</span>
+<span class="inline-flex items-center gap-1 w-fit px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary-fixed text-on-primary-fixed">
+<span class="material-symbols-outlined text-[12px]">verified</span>
+                    Resp. Inscripto (Factura A)
+                  </span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col gap-1">
+<span class="font-semibold text-on-surface">Hernán Valenzuela</span>
+<div class="flex items-center gap-2">
+<a class="inline-flex items-center gap-1 text-[11px] font-medium text-tertiary hover:underline bg-tertiary-fixed/30 px-1.5 py-0.5 rounded" href="https://wa.me/5493794128832?text=Hola%20Hernan,%20consulta%20de%20stock%20VoltAcc" target="_blank">
+<span class="material-symbols-outlined text-[14px]">chat</span>
+                      +54 9 379 412-8832
+                    </a>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col gap-0.5">
+<span class="font-medium text-on-surface">Lunes y Jueves</span>
+<span class="text-[11px] text-on-surface-variant font-label">Despacho 48hs</span>
+<span class="text-[10px] text-primary font-medium">Cond: Cta. Cte. 15d</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="px-2 py-1 rounded-md text-[11px] font-semibold bg-surface-container text-on-surface">
+                  Accesorios Telefonía
+                </span>
+</td>
+<td class="py-3.5 px-4 text-right">
+<div class="flex flex-col items-end">
+<span class="font-label text-sm font-bold text-error">$680,000 ARS</span>
+<span class="text-[10px] text-error font-medium">Vence en 3 días</span>
+</div>
+</td>
+<td class="py-3.5 px-4 text-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-tertiary-fixed text-on-tertiary-fixed">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                  Activo
+                </span>
+</td>
+<td class="py-3.5 px-4 text-center">
+<div class="flex items-center justify-center gap-1">
+<button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors" onclick="toggleDetail('detail-distribuidora-norte')" title="Ver Ficha y Productos Vinculados">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+<button class="p-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary hover:text-primary-container transition-colors" onclick="openPagoModal('Distribuidora Norte S.R.L.', '$680,000 ARS')" title="Pagar Saldo Cta Cte">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+</button>
+<button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-error transition-colors" title="Editar Proveedor">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Detalle Expandido 1: Distribuidora Norte -->
+<tr class="hidden bg-surface-container-low/40" id="detail-distribuidora-norte">
+<td class="p-4" colspan="8">
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm space-y-4">
+<div class="flex items-center justify-between border-b pb-2 border-surface-container">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">inventory</span>
+<h4 class="font-headline font-bold text-sm text-on-surface">Catálogo de Productos Vinculados &amp; SKU Externos (Distribuidora Norte)</h4>
+</div>
+<span class="text-xs font-label text-on-surface-variant">Proveedor Preferente de Carga Rápida</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+<div class="p-3 rounded-lg bg-surface-container-low flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-label text-[11px] font-bold text-primary">DIST-CHG-35W</span>
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary-fixed text-on-primary-fixed">Reventa</span>
+</div>
+<h5 class="font-bold text-xs text-on-surface mt-1">Cargador Rápido VoltAcc 35W Dual GaN</h5>
+<p class="text-[11px] text-on-surface-variant mt-0.5">SKU Interno: SKU-PWR-35-DUAL</p>
+</div>
+<div class="mt-3 pt-2 border-t border-surface-container flex items-center justify-between font-label text-xs">
+<span class="text-on-surface-variant">Últ. Costo: <strong class="text-on-surface">$12,450 ARS</strong></span>
+<span class="text-tertiary">PVP: $24,900 (100%)</span>
+</div>
+</div>
+<div class="p-3 rounded-lg bg-surface-container-low flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-label text-[11px] font-bold text-primary">DIST-MGS-CLR</span>
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary-fixed text-on-primary-fixed">Reventa</span>
+</div>
+<h5 class="font-bold text-xs text-on-surface mt-1">Funda Silicona Antichoque MagSafe Clear</h5>
+<p class="text-[11px] text-on-surface-variant mt-0.5">SKU Interno: SKU-CAS-MGS-15</p>
+</div>
+<div class="mt-3 pt-2 border-t border-surface-container flex items-center justify-between font-label text-xs">
+<span class="text-on-surface-variant">Últ. Costo: <strong class="text-on-surface">$5,100 ARS</strong></span>
+<span class="text-tertiary">PVP: $11,900 (133%)</span>
+</div>
+</div>
+<div class="p-3 rounded-lg bg-surface-container-low flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-label text-[11px] font-bold text-primary">DIST-VID-9D</span>
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary-fixed text-on-primary-fixed">Reventa</span>
+</div>
+<h5 class="font-bold text-xs text-on-surface mt-1">Vidrio Templado Cerámico 9D Full Cover</h5>
+<p class="text-[11px] text-on-surface-variant mt-0.5">SKU Interno: SKU-SCR-9D-UNIV</p>
+</div>
+<div class="mt-3 pt-2 border-t border-surface-container flex items-center justify-between font-label text-xs">
+<span class="text-on-surface-variant">Últ. Costo: <strong class="text-on-surface">$1,450 ARS</strong></span>
+<span class="text-tertiary">PVP: $4,500 (210%)</span>
+</div>
+</div>
+</div>
+</div>
+</td>
+</tr>
+<!-- Row 2: Papelera Central (Insumos POS) -->
+<tr class="hover:bg-surface-container-low/70 transition-colors group">
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center font-bold text-sm font-headline">
+                    PC
+                  </div>
+<div class="flex flex-col">
+<span class="font-bold text-on-surface text-sm font-headline group-hover:text-primary transition-colors">Papelera Central</span>
+<span class="text-[11px] text-on-surface-variant">Comercializadora de Gráfica &amp; Packaging</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col gap-1">
+<span class="font-label text-xs font-semibold text-on-surface">30-68192033-9</span>
+<span class="inline-flex items-center gap-1 w-fit px-2 py-0.5 rounded-full text-[10px] font-bold bg-surface-container-high text-on-surface">
+<span class="material-symbols-outlined text-[12px]">verified</span>
+                    Resp. Inscripto (Factura A)
+                  </span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col gap-1">
+<span class="font-semibold text-on-surface">Silvia Giménez</span>
+<div class="flex items-center gap-2">
+<a class="inline-flex items-center gap-1 text-[11px] font-medium text-tertiary hover:underline bg-tertiary-fixed/30 px-1.5 py-0.5 rounded" href="https://wa.me/5493794771122" target="_blank">
+<span class="material-symbols-outlined text-[14px]">chat</span>
+                      +54 9 379 477-1122
+                    </a>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col gap-0.5">
+<span class="font-medium text-on-surface">Martes semanal</span>
+<span class="text-[11px] text-on-surface-variant font-label">Reparto en local</span>
+<span class="text-[10px] text-primary font-medium">Cond: Transferencia 30d</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="px-2 py-1 rounded-md text-[11px] font-semibold bg-tertiary-fixed text-on-tertiary-fixed">
+                  Papelería &amp; Rollos Térmicos POS
+                </span>
+</td>
+<td class="py-3.5 px-4 text-right">
+<div class="flex flex-col items-end">
+<span class="font-label text-sm font-bold text-on-surface">$145,500 ARS</span>
+<span class="text-[10px] text-on-surface-variant font-medium">Vence en 14 días</span>
+</div>
+</td>
+<td class="py-3.5 px-4 text-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-tertiary-fixed text-on-tertiary-fixed">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                  Activo
+                </span>
+</td>
+<td class="py-3.5 px-4 text-center">
+<div class="flex items-center justify-center gap-1">
+<button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors" onclick="toggleDetail('detail-papelera-central')" title="Ver Ficha y Productos Vinculados">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+<button class="p-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary hover:text-primary-container transition-colors" onclick="openPagoModal('Papelera Central', '$145,500 ARS')" title="Pagar Saldo Cta Cte">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+</button>
+<button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-error transition-colors" title="Editar Proveedor">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Detalle Expandido 2: Papelera Central (Insumos Operativos Internos) -->
+<tr class="hidden bg-surface-container-low/40" id="detail-papelera-central">
+<td class="p-4" colspan="8">
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm space-y-4">
+<div class="flex items-center justify-between border-b pb-2 border-surface-container">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-xl">receipt_long</span>
+<h4 class="font-headline font-bold text-sm text-on-surface">Insumos Internos y Operativos de Terminales POS (Papelera Central)</h4>
+</div>
+<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-tertiary-fixed text-on-tertiary-fixed">Consumo Interno / No Genera Ticket POS</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+<div class="p-3 rounded-lg bg-surface-container-low flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-label text-[11px] font-bold text-secondary">PAP-ROL-80MM</span>
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-error-container text-on-error-container">Stock Crítico: 4 u.</span>
+</div>
+<h5 class="font-bold text-xs text-on-surface mt-1">Rollos Papel Térmico 80mm x 50m (Comprobantes POS)</h5>
+<p class="text-[11px] text-on-surface-variant mt-0.5">Uso: Impresoras Epson TM-T20III &amp; Sam4s Cajas 01/02/03/04</p>
+</div>
+<div class="mt-3 pt-2 border-t border-surface-container flex items-center justify-between font-label text-xs">
+<span class="text-on-surface-variant">Costo Unit.: <strong class="text-on-surface">$820 ARS</strong></span>
+<span class="text-error font-bold">Mínimo sugerido: 20 u. (Pedir 50 u.)</span>
+</div>
+</div>
+<div class="p-3 rounded-lg bg-surface-container-low flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-label text-[11px] font-bold text-secondary">PAP-ETIQ-5030</span>
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-tertiary-fixed text-on-tertiary-fixed">Stock OK: 12 rollos</span>
+</div>
+<h5 class="font-bold text-xs text-on-surface mt-1">Etiquetas Autoadhesivas Código de Barras 50x30mm</h5>
+<p class="text-[11px] text-on-surface-variant mt-0.5">Uso: Impresora Zebra ZD220 etiquetado de cables y fundas</p>
+</div>
+<div class="mt-3 pt-2 border-t border-surface-container flex items-center justify-between font-label text-xs">
+<span class="text-on-surface-variant">Costo Unit.: <strong class="text-on-surface">$2,400 ARS</strong></span>
+<span class="text-on-surface-variant">Mínimo stock: 4 u.</span>
+</div>
+</div>
+</div>
+</div>
+</td>
+</tr>
+<!-- Row 3: MicroTech Mayorista Accesorios -->
+<tr class="hover:bg-surface-container-low/70 transition-colors group">
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center font-bold text-sm font-headline">
+                    MT
+                  </div>
+<div class="flex flex-col">
+<span class="font-bold text-on-surface text-sm font-headline group-hover:text-primary transition-colors">MicroTech Mayorista</span>
+<span class="text-[11px] text-on-surface-variant">Importaciones Directas Shenzhen &amp; Tech</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col gap-1">
+<span class="font-label text-xs font-semibold text-on-surface">30-71882049-1</span>
+<span class="inline-flex items-center gap-1 w-fit px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary-fixed text-on-primary-fixed">
+<span class="material-symbols-outlined text-[12px]">verified</span>
+                    Resp. Inscripto (Factura A)
+                  </span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col gap-1">
+<span class="font-semibold text-on-surface">Lucas Benítez</span>
+<div class="flex items-center gap-2">
+<a class="inline-flex items-center gap-1 text-[11px] font-medium text-tertiary hover:underline bg-tertiary-fixed/30 px-1.5 py-0.5 rounded" href="https://wa.me/5491155890012" target="_blank">
+<span class="material-symbols-outlined text-[14px]">chat</span>
+                      +54 9 11 5589-0012
+                    </a>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col gap-0.5">
+<span class="font-medium text-on-surface">Miércoles quincenal</span>
+<span class="text-[11px] text-on-surface-variant font-label">Envío Vía Cargo</span>
+<span class="text-[10px] text-primary font-medium">Cond: Contado / Transf. Inmediata</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="px-2 py-1 rounded-md text-[11px] font-semibold bg-surface-container text-on-surface">
+                  Accesorios Telefonía &amp; Audio
+                </span>
+</td>
+<td class="py-3.5 px-4 text-right">
+<div class="flex flex-col items-end">
+<span class="font-label text-sm font-bold text-error">$595,000 ARS</span>
+<span class="text-[10px] text-error font-medium">Vence en 2 días</span>
+</div>
+</td>
+<td class="py-3.5 px-4 text-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-tertiary-fixed text-on-tertiary-fixed">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                  Activo
+                </span>
+</td>
+<td class="py-3.5 px-4 text-center">
+<div class="flex items-center justify-center gap-1">
+<button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+<button class="p-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary transition-colors" onclick="openPagoModal('MicroTech Mayorista', '$595,000 ARS')">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+</button>
+<button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4: Embalajes & Rollos Express -->
+<tr class="hover:bg-surface-container-low/70 transition-colors group">
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-surface-container-highest text-on-surface flex items-center justify-center font-bold text-sm font-headline">
+                    EE
+                  </div>
+<div class="flex flex-col">
+<span class="font-bold text-on-surface text-sm font-headline group-hover:text-primary transition-colors">Embalajes Express</span>
+<span class="text-[11px] text-on-surface-variant">Bolsas Oxobiodegradables &amp; Cinta</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col gap-1">
+<span class="font-label text-xs font-semibold text-on-surface">20-33901238-7</span>
+<span class="inline-flex items-center gap-1 w-fit px-2 py-0.5 rounded-full text-[10px] font-bold bg-surface-variant text-on-surface-variant">
+<span class="material-symbols-outlined text-[12px]">badge</span>
+                    Monotributo (Factura C)
+                  </span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col gap-1">
+<span class="font-semibold text-on-surface">Martín Ojeda</span>
+<div class="flex items-center gap-2">
+<a class="inline-flex items-center gap-1 text-[11px] font-medium text-tertiary hover:underline bg-tertiary-fixed/30 px-1.5 py-0.5 rounded" href="https://wa.me/5493794339900" target="_blank">
+<span class="material-symbols-outlined text-[14px]">chat</span>
+                      +54 9 379 433-9900
+                    </a>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col gap-0.5">
+<span class="font-medium text-on-surface">Viernes quincenal</span>
+<span class="text-[11px] text-on-surface-variant font-label">A pedido anticipado</span>
+<span class="text-[10px] text-primary font-medium">Cond: Contado Efectivo</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="px-2 py-1 rounded-md text-[11px] font-semibold bg-surface-container text-on-surface">
+                  Embalajes &amp; Bolsas POS
+                </span>
+</td>
+<td class="py-3.5 px-4 text-right">
+<div class="flex flex-col items-end">
+<span class="font-label text-sm font-bold text-tertiary">$0 ARS</span>
+<span class="text-[10px] text-tertiary font-medium">Al Día</span>
+</div>
+</td>
+<td class="py-3.5 px-4 text-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-tertiary-fixed text-on-tertiary-fixed">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                  Activo
+                </span>
+</td>
+<td class="py-3.5 px-4 text-center">
+<div class="flex items-center justify-center gap-1">
+<button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+<button class="p-1.5 rounded-lg bg-surface-container/50 text-outline cursor-not-allowed" disabled="" title="Sin deuda pendiente">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+</button>
+<button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Footer de Paginación y Resumen -->
+<div class="p-4 bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span>Página 1 de 2</span>
+<span>•</span>
+<span>18 proveedores totales homologados bajo normativa comercial</span>
+</div>
+<div class="flex items-center gap-1">
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-lowest text-on-surface font-semibold shadow-sm hover:bg-surface-container transition-colors disabled:opacity-50" disabled="">Anterior</button>
+<button class="px-3 py-1.5 rounded-lg bg-primary text-on-primary font-semibold shadow-sm">1</button>
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-lowest text-on-surface font-semibold shadow-sm hover:bg-surface-container transition-colors">2</button>
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-lowest text-on-surface font-semibold shadow-sm hover:bg-surface-container transition-colors">Siguiente</button>
+</div>
+</div>
+</div>
+</div>
+<!-- ========================================================================= -->
+<!-- TAB 2: INGRESO DE COMPRAS & STOCK (Recepción de Factura / Remito)          -->
+<!-- ========================================================================= -->
+<div class="tab-content hidden space-y-6" id="tab-ingreso-compras">
+<!-- Panel Formulario de Recepción -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm">
+<div class="flex items-center justify-between pb-4 mb-4 border-b border-surface-container">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-secondary text-on-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-2xl">receipt_long</span>
+</div>
+<div>
+<h3 class="font-headline font-bold text-lg text-on-surface">Recepción de Mercadería &amp; Carga de Comprobante</h3>
+<p class="text-xs text-on-surface-variant">Impacto directo e inmediato en stock físico del depósito central + actualización de costo de reposición.</p>
+</div>
+</div>
+<span class="px-3 py-1 rounded-full text-xs font-bold font-label bg-tertiary-fixed text-on-tertiary-fixed">
+          Stock Sync: En Línea
+        </span>
+</div>
+<!-- Cabecera de Comprobante -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+<div>
+<label class="block text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-1 font-label">Proveedor</label>
+<select class="w-full h-11 px-3 rounded-lg bg-surface-container-low text-xs text-on-surface font-medium focus:outline-none focus:ring-2 focus:ring-primary" id="compra-proveedor">
+<option value="dist-norte">Distribuidora Norte S.R.L. (CUIT 30-71449812-4)</option>
+<option value="micro-tech">MicroTech Mayorista (CUIT 30-71882049-1)</option>
+<option value="papelera">Papelera Central (CUIT 30-68192033-9)</option>
+<option value="embalajes">Embalajes Express (CUIT 20-33901238-7)</option>
+</select>
+</div>
+<div>
+<label class="block text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-1 font-label">Tipo de Comprobante</label>
+<select class="w-full h-11 px-3 rounded-lg bg-surface-container-low text-xs text-on-surface font-medium focus:outline-none focus:ring-2 focus:ring-primary">
+<option value="factura-a">Factura A (Con Discriminación IVA)</option>
+<option value="factura-c">Factura C (Monotributo)</option>
+<option value="remito-x">Remito Oficial R / Remito X</option>
+</select>
+</div>
+<div>
+<label class="block text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-1 font-label">Nº Comprobante</label>
+<input class="w-full h-11 px-3 rounded-lg bg-surface-container-low text-xs text-on-surface font-label font-bold focus:outline-none focus:ring-2 focus:ring-primary" placeholder="0001-00000000" type="text" value="0004-00018492"/>
+</div>
+<div>
+<label class="block text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-1 font-label">Fecha de Emisión / Recepción</label>
+<input class="w-full h-11 px-3 rounded-lg bg-surface-container-low text-xs text-on-surface font-label focus:outline-none focus:ring-2 focus:ring-primary" type="date" value="2025-05-14"/>
+</div>
+</div>
+<!-- Detalle de Ítems Cargados -->
+<div class="mb-6">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-bold uppercase tracking-wider text-on-surface-variant font-label">Renglones del Comprobante (Mercadería e Insumos)</span>
+<button class="text-xs text-primary hover:underline font-semibold flex items-center gap-1 font-label" type="button">
+<span class="material-symbols-outlined text-base">add_circle</span> Agregar Fila Manual
+          </button>
+</div>
+<div class="bg-surface-container-low rounded-xl overflow-hidden shadow-inner">
+<table class="w-full text-left border-collapse text-xs">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant font-label text-[11px] uppercase tracking-wider">
+<th class="py-2.5 px-3">SKU / Producto</th>
+<th class="py-2.5 px-3">Tipo</th>
+<th class="py-2.5 px-3 text-center">Cant. Ingreso</th>
+<th class="py-2.5 px-3 text-right">Costo Unit. Neto</th>
+<th class="py-2.5 px-3 text-center">Alícuota IVA</th>
+<th class="py-2.5 px-3 text-right">Subtotal</th>
+<th class="py-2.5 px-3 text-right">Margen Sug. (PVP)</th>
+<th class="py-2.5 px-3 text-center">Acción</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<!-- Item 1 -->
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="py-3 px-3">
+<div class="font-bold text-on-surface">Cargador Rápido VoltAcc 35W Dual GaN</div>
+<div class="font-label text-[10px] text-on-surface-variant">DIST-CHG-35W / SKU-PWR-35-DUAL</div>
+</td>
+<td class="py-3 px-3">
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary-fixed text-on-primary-fixed">Reventa</span>
+</td>
+<td class="py-3 px-3 text-center">
+<input class="w-16 h-8 text-center rounded bg-surface-container text-xs font-label font-bold focus:outline-none focus:ring-1 focus:ring-primary" type="number" value="30"/>
+</td>
+<td class="py-3 px-3 text-right font-label font-bold text-on-surface">$12,450.00</td>
+<td class="py-3 px-3 text-center font-label">21.0%</td>
+<td class="py-3 px-3 text-right font-label font-bold text-on-surface">$373,500.00</td>
+<td class="py-3 px-3 text-right">
+<span class="font-label font-bold text-tertiary">$24,900.00</span>
+<span class="block text-[10px] text-on-surface-variant font-label">(Margen 100%)</span>
+</td>
+<td class="py-3 px-3 text-center">
+<button class="text-error hover:text-on-error-container p-1 rounded hover:bg-error-container"><span class="material-symbols-outlined text-base">delete</span></button>
+</td>
+</tr>
+<!-- Item 2 -->
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="py-3 px-3">
+<div class="font-bold text-on-surface">Funda Silicona Antichoque MagSafe Clear</div>
+<div class="font-label text-[10px] text-on-surface-variant">DIST-MGS-CLR / SKU-CAS-MGS-15</div>
+</td>
+<td class="py-3 px-3">
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary-fixed text-on-primary-fixed">Reventa</span>
+</td>
+<td class="py-3 px-3 text-center">
+<input class="w-16 h-8 text-center rounded bg-surface-container text-xs font-label font-bold focus:outline-none focus:ring-1 focus:ring-primary" type="number" value="50"/>
+</td>
+<td class="py-3 px-3 text-right font-label font-bold text-on-surface">$5,100.00</td>
+<td class="py-3 px-3 text-center font-label">21.0%</td>
+<td class="py-3 px-3 text-right font-label font-bold text-on-surface">$255,000.00</td>
+<td class="py-3 px-3 text-right">
+<span class="font-label font-bold text-tertiary">$11,900.00</span>
+<span class="block text-[10px] text-on-surface-variant font-label">(Margen 133%)</span>
+</td>
+<td class="py-3 px-3 text-center">
+<button class="text-error hover:text-on-error-container p-1 rounded hover:bg-error-container"><span class="material-symbols-outlined text-base">delete</span></button>
+</td>
+</tr>
+<!-- Item 3: Insumo Operativo Taller -->
+<tr class="hover:bg-surface-container-lowest transition-colors bg-surface-container-high/30">
+<td class="py-3 px-3">
+<div class="font-bold text-on-surface">Alcohol Isopropílico 99.8% (Bidón 5 Litros)</div>
+<div class="font-label text-[10px] text-on-surface-variant">TEC-ALC-5L / INS-TALLER-003</div>
+</td>
+<td class="py-3 px-3">
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-tertiary-fixed text-on-tertiary-fixed">Insumo Taller</span>
+</td>
+<td class="py-3 px-3 text-center">
+<input class="w-16 h-8 text-center rounded bg-surface-container text-xs font-label font-bold focus:outline-none focus:ring-1 focus:ring-primary" type="number" value="2"/>
+</td>
+<td class="py-3 px-3 text-right font-label font-bold text-on-surface">$22,000.00</td>
+<td class="py-3 px-3 text-center font-label">21.0%</td>
+<td class="py-3 px-3 text-right font-label font-bold text-on-surface">$44,000.00</td>
+<td class="py-3 px-3 text-right">
+<span class="text-[11px] text-on-surface-variant font-medium">Consumo Taller</span>
+<span class="block text-[10px] text-outline font-label">(No Reventa)</span>
+</td>
+<td class="py-3 px-3 text-center">
+<button class="text-error hover:text-on-error-container p-1 rounded hover:bg-error-container"><span class="material-symbols-outlined text-base">delete</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Resumen de Totales y Liquidación -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 pt-4 border-t border-surface-container">
+<div class="space-y-2">
+<div class="flex items-center gap-2 text-xs font-medium text-on-surface">
+<input checked="" class="rounded text-primary focus:ring-primary" id="check-stock-auto" type="checkbox"/>
+<label for="check-stock-auto">Ingresar inmediatamente +82 unidades físicas al stock del Depósito Central</label>
+</div>
+<div class="flex items-center gap-2 text-xs font-medium text-on-surface">
+<input checked="" class="rounded text-primary focus:ring-primary" id="check-actualizar-precios" type="checkbox"/>
+<label for="check-actualizar-precios">Actualizar precio de reposición y ajustar PVP con margen configurado</label>
+</div>
+<div class="flex items-center gap-2 text-xs font-medium text-on-surface">
+<input checked="" class="rounded text-primary focus:ring-primary" id="check-cta-cte" type="checkbox"/>
+<label for="check-cta-cte">Cargar comprobante a Cuenta Corriente del Proveedor (Vencimiento 15 días)</label>
+</div>
+</div>
+<div class="w-full md:w-80 bg-surface-container-low p-4 rounded-xl space-y-2">
+<div class="flex justify-between text-xs text-on-surface-variant font-label">
+<span>Subtotal Neto Gravado:</span>
+<span class="font-bold text-on-surface">$672,500.00 ARS</span>
+</div>
+<div class="flex justify-between text-xs text-on-surface-variant font-label">
+<span>IVA Crédito Fiscal (21%):</span>
+<span class="font-bold text-on-surface">$141,225.00 ARS</span>
+</div>
+<div class="flex justify-between text-sm font-bold text-on-surface pt-2 border-t border-surface-container font-headline">
+<span>Total Factura:</span>
+<span class="text-primary font-label text-base">$813,725.00 ARS</span>
+</div>
+<button class="w-full h-11 mt-2 rounded-lg bg-primary hover:bg-primary-container text-on-primary font-semibold text-xs flex items-center justify-center gap-2 transition-transform active:scale-95 shadow-sm">
+<span class="material-symbols-outlined text-lg">check_circle</span>
+<span>Confirmar Recepción &amp; Sumar Stock</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- ========================================================================= -->
+<!-- TAB 3: CUENTAS CORRIENTES & PAGOS (Integración con Caja POS)             -->
+<!-- ========================================================================= -->
+<div class="tab-content hidden space-y-6" id="tab-cuentas-corrientes">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Columna 1 y 2: Facturas Pendientes de Pago -->
+<div class="lg:col-span-2 bg-surface-container-lowest p-6 rounded-xl shadow-sm space-y-4">
+<div class="flex items-center justify-between pb-3 border-b border-surface-container">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-error text-2xl">pending_actions</span>
+<div>
+<h3 class="font-headline font-bold text-base text-on-surface">Vencimientos Próximos en Cuenta Corriente</h3>
+<p class="text-xs text-on-surface-variant">Facturas impagas con plazo acordado con proveedores mayoristas.</p>
+</div>
+</div>
+<span class="px-2.5 py-1 rounded-full text-xs font-bold font-label bg-error-container text-on-error-container">
+            Total Exigible: $1,420,500 ARS
+          </span>
+</div>
+<div class="space-y-3">
+<!-- Item Pendiente 1 -->
+<div class="p-4 rounded-xl bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div class="space-y-1">
+<div class="flex items-center gap-2">
+<span class="font-headline font-bold text-sm text-on-surface">Distribuidora Norte S.R.L.</span>
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-error-container text-on-error-container">Vence en 3 días</span>
+</div>
+<p class="text-xs text-on-surface-variant font-label">Factura A 0004-00018104 • Emisión 02/05/2025</p>
+<div class="flex items-center gap-3 text-xs text-on-surface-variant">
+<span>CBU: 0110023430000019284711</span>
+<span>•</span>
+<span>Alias: DIST.NORTE.PAGOS</span>
+</div>
+</div>
+<div class="flex sm:flex-col items-end justify-between sm:justify-center gap-2">
+<span class="font-label text-base font-bold text-error">$680,000 ARS</span>
+<button class="h-9 px-3 rounded-lg bg-primary hover:bg-primary-container text-on-primary font-semibold text-xs flex items-center gap-1.5 shadow-sm" onclick="openPagoModal('Distribuidora Norte S.R.L.', '$680,000 ARS')">
+<span class="material-symbols-outlined text-base">point_of_sale</span>
+<span>Emitir Pago</span>
+</button>
+</div>
+</div>
+<!-- Item Pendiente 2 -->
+<div class="p-4 rounded-xl bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div class="space-y-1">
+<div class="flex items-center gap-2">
+<span class="font-headline font-bold text-sm text-on-surface">MicroTech Mayorista</span>
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-error-container text-on-error-container">Vence en 2 días</span>
+</div>
+<p class="text-xs text-on-surface-variant font-label">Factura A 0002-00009411 • Emisión 05/05/2025</p>
+<div class="flex items-center gap-3 text-xs text-on-surface-variant">
+<span>CBU: 0720194420000088210459</span>
+<span>•</span>
+<span>Alias: MICROTECH.VENTAS</span>
+</div>
+</div>
+<div class="flex sm:flex-col items-end justify-between sm:justify-center gap-2">
+<span class="font-label text-base font-bold text-error">$595,000 ARS</span>
+<button class="h-9 px-3 rounded-lg bg-primary hover:bg-primary-container text-on-primary font-semibold text-xs flex items-center gap-1.5 shadow-sm" onclick="openPagoModal('MicroTech Mayorista', '$595,000 ARS')">
+<span class="material-symbols-outlined text-base">point_of_sale</span>
+<span>Emitir Pago</span>
+</button>
+</div>
+</div>
+<!-- Item Pendiente 3 -->
+<div class="p-4 rounded-xl bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div class="space-y-1">
+<div class="flex items-center gap-2">
+<span class="font-headline font-bold text-sm text-on-surface">Papelera Central</span>
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-surface-container-highest text-on-surface">Vence en 14 días</span>
+</div>
+<p class="text-xs text-on-surface-variant font-label">Factura A 0001-00045129 • Emisión 10/05/2025</p>
+<div class="flex items-center gap-3 text-xs text-on-surface-variant">
+<span>Rollos Térmicos 80mm &amp; Etiquetas</span>
+</div>
+</div>
+<div class="flex sm:flex-col items-end justify-between sm:justify-center gap-2">
+<span class="font-label text-base font-bold text-on-surface">$145,500 ARS</span>
+<button class="h-9 px-3 rounded-lg bg-secondary hover:bg-secondary-container text-on-secondary font-semibold text-xs flex items-center gap-1.5 shadow-sm" onclick="openPagoModal('Papelera Central', '$145,500 ARS')">
+<span class="material-symbols-outlined text-base">point_of_sale</span>
+<span>Emitir Pago</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Columna 3: Arqueo y Caja del Turno Activo (Integración de Pago) -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm space-y-4">
+<div class="flex items-center gap-2.5 pb-3 border-b border-surface-container">
+<div class="w-8 h-8 rounded-lg bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center font-bold">
+<span class="material-symbols-outlined text-lg">point_of_sale</span>
+</div>
+<div>
+<h4 class="font-headline font-bold text-sm text-on-surface">Caja 04 • Turno Activo</h4>
+<span class="text-[11px] text-tertiary font-semibold">Cajero: E. Harrison</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl space-y-3">
+<span class="text-xs font-semibold text-on-surface-variant uppercase font-label">Efectivo Físico en Cajón</span>
+<div class="flex items-baseline justify-between">
+<span class="font-label text-2xl font-bold text-on-surface">$314,800</span>
+<span class="text-xs text-tertiary font-semibold">Disponible</span>
+</div>
+<p class="text-[11px] text-on-surface-variant">
+            Límite de egreso en efectivo de mostrador: <strong class="text-on-surface">$150,000 ARS</strong> por operación sin pin de tesorero.
+          </p>
+</div>
+<div class="space-y-2 text-xs text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-base">check</span>
+<span>Genera comprobante de <strong>Egreso de Caja</strong> fiscal.</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-base">check</span>
+<span>Ajusta cuadre automático para el cierre X y Z.</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-base">check</span>
+<span>Impresión instantánea de recibo duplicado para firma del repartidor.</span>
+</div>
+</div>
+<div class="pt-3 border-t border-surface-container">
+<button class="w-full h-11 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-semibold text-xs flex items-center justify-center gap-2 transition-colors" onclick="openPagoModal('Pago a Proveedor Directo', '$50,000 ARS')">
+<span class="material-symbols-outlined text-lg text-primary">output</span>
+<span>Registrar Egreso Rápido de Efectivo</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- ========================================================================= -->
+<!-- TAB 4: ALERTA DE REPOSICIÓN SUGERIDA (WhatsApp / PDF)                     -->
+<!-- ========================================================================= -->
+<div class="tab-content hidden space-y-6" id="tab-reposicion-alerta">
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm">
+<div class="flex flex-col md:flex-row md:items-center justify-between pb-4 mb-4 border-b border-surface-container gap-4">
+<div>
+<div class="flex items-center gap-2">
+<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-error-container text-on-error-container font-label">
+              URGENTE • QUIEBRE DE STOCK INMINENTE
+            </span>
+<span class="text-xs text-on-surface-variant font-label">Algoritmo de Rotación 15d</span>
+</div>
+<h3 class="font-headline font-bold text-xl text-on-surface mt-1">Generador de Pedido y Reposición Sugerida</h3>
+<p class="text-xs text-on-surface-variant">Cálculo en base a ventas de los últimos 15 días y stock mínimo por terminal.</p>
+</div>
+<!-- Filtro por Proveedor en Reposición -->
+<div class="flex items-center gap-2">
+<label class="text-xs font-semibold text-on-surface-variant font-label">Filtrar por Proveedor:</label>
+<select class="h-10 px-3 rounded-lg bg-surface-container-low text-xs text-on-surface font-semibold focus:outline-none focus:ring-2 focus:ring-primary" id="select-proveedor-alerta" onchange="filterAlertaProveedor(this.value)">
+<option value="todos">Todos los Proveedores (8 ítems)</option>
+<option selected="" value="papelera">Papelera Central (Rollos POS &amp; Etiquetas)</option>
+<option value="dist-norte">Distribuidora Norte S.R.L. (Accesorios)</option>
+<option value="micro-tech">MicroTech Mayorista (Audio &amp; Cables)</option>
+</select>
+</div>
+</div>
+<!-- Tabla de Insumos Críticos -->
+<div class="bg-surface-container-low rounded-xl overflow-hidden mb-6">
+<table class="w-full text-left border-collapse text-xs">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant font-label text-[11px] uppercase tracking-wider">
+<th class="py-3 px-4">Insumo / Mercadería</th>
+<th class="py-3 px-4">Proveedor Habitual</th>
+<th class="py-3 px-4 text-center">Stock Actual</th>
+<th class="py-3 px-4 text-center">Stock Mínimo</th>
+<th class="py-3 px-4 text-center">Sugerido a Pedir</th>
+<th class="py-3 px-4 text-right">Costo Estimado</th>
+<th class="py-3 px-4 text-center">Estado</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<!-- Row 1: Rollos Papel Térmico -->
+<tr class="hover:bg-surface-container-lowest transition-colors bg-error-container/10">
+<td class="py-3.5 px-4">
+<div class="font-bold text-on-surface">Rollos Papel Térmico 80mm x 50m (POS)</div>
+<div class="text-[11px] text-on-surface-variant font-label">SKU: PAP-ROL-80MM • Consumo de Cajas 01 a 04</div>
+</td>
+<td class="py-3.5 px-4 font-semibold text-primary">Papelera Central</td>
+<td class="py-3.5 px-4 text-center font-label font-bold text-error text-sm">4 u.</td>
+<td class="py-3.5 px-4 text-center font-label text-on-surface-variant">20 u.</td>
+<td class="py-3.5 px-4 text-center">
+<span class="px-2.5 py-1 rounded-lg bg-tertiary-fixed text-on-tertiary-fixed font-label font-bold text-xs">
+                  50 u. (1 Caja Master)
+                </span>
+</td>
+<td class="py-3.5 px-4 text-right font-label font-bold text-on-surface">$41,000 ARS</td>
+<td class="py-3.5 px-4 text-center">
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-error text-on-error">Crítico</span>
+</td>
+</tr>
+<!-- Row 2: Cargador 35W Dual GaN -->
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="py-3.5 px-4">
+<div class="font-bold text-on-surface">Cargador Rápido VoltAcc 35W Dual GaN</div>
+<div class="text-[11px] text-on-surface-variant font-label">SKU: DIST-CHG-35W • Reventa Top 3</div>
+</td>
+<td class="py-3.5 px-4 font-semibold text-primary">Distribuidora Norte S.R.L.</td>
+<td class="py-3.5 px-4 text-center font-label font-bold text-error text-sm">2 u.</td>
+<td class="py-3.5 px-4 text-center font-label text-on-surface-variant">15 u.</td>
+<td class="py-3.5 px-4 text-center">
+<span class="px-2.5 py-1 rounded-lg bg-tertiary-fixed text-on-tertiary-fixed font-label font-bold text-xs">
+                  30 u.
+                </span>
+</td>
+<td class="py-3.5 px-4 text-right font-label font-bold text-on-surface">$373,500 ARS</td>
+<td class="py-3.5 px-4 text-center">
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-error text-on-error">Crítico</span>
+</td>
+</tr>
+<!-- Row 3: Bolsas Oxobiodegradables -->
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="py-3.5 px-4">
+<div class="font-bold text-on-surface">Bolsas Camiseta Oxo 30x40 Impresas VoltAcc</div>
+<div class="text-[11px] text-on-surface-variant font-label">SKU: EMB-BOL-3040 • Packaging Mostrador</div>
+</td>
+<td class="py-3.5 px-4 font-semibold text-primary">Embalajes Express</td>
+<td class="py-3.5 px-4 text-center font-label font-bold text-on-surface text-sm">1 paquete</td>
+<td class="py-3.5 px-4 text-center font-label text-on-surface-variant">5 paq.</td>
+<td class="py-3.5 px-4 text-center">
+<span class="px-2.5 py-1 rounded-lg bg-surface-container-high text-on-surface font-label font-bold text-xs">
+                  10 paquetes (1.000 u.)
+                </span>
+</td>
+<td class="py-3.5 px-4 text-right font-label font-bold text-on-surface">$28,900 ARS</td>
+<td class="py-3.5 px-4 text-center">
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-surface-container-highest text-on-surface">Bajo Stock</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Preview del Mensaje de WhatsApp & Exportador -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+<div class="bg-surface-container-low p-4 rounded-xl space-y-3">
+<div class="flex items-center justify-between">
+<span class="text-xs font-bold uppercase tracking-wider text-on-surface font-label flex items-center gap-1.5">
+<span class="material-symbols-outlined text-tertiary text-lg">chat</span>
+              Formato WhatsApp Automatizado para el Preventista
+            </span>
+<span class="text-[11px] font-label text-on-surface-variant">Preventista: Silvia Giménez</span>
+</div>
+<div class="bg-surface-container-lowest p-3.5 rounded-lg text-xs font-label text-on-surface leading-relaxed border border-surface-container">
+            Hola Silvia (Papelera Central) 👋 Te paso el pedido urgente de reposición para el local VoltAcc Downtown:<br/><br/>
+            📦 *50x* Rollos Papel Térmico 80mm x 50m (Cod: PAP-ROL-80MM)<br/>
+            📦 *10x* Etiquetas Autoadhesivas 50x30mm (Cod: PAP-ETIQ-5030)<br/><br/>
+            📍 Entrega: Local Central Metropolitan (Caja POS 04)<br/>
+            🧾 Factura A a CUIT 30-71449812-4<br/>
+            ¡Avisame cuando despachan! Gracias.
+          </div>
+<div class="flex flex-wrap items-center gap-2 pt-1">
+<button class="h-10 px-4 rounded-lg bg-tertiary hover:bg-tertiary-container text-on-tertiary font-semibold text-xs flex items-center gap-2 shadow-sm transition-transform active:scale-95" id="btn-copy-wa" onclick="copyWhatsappMsg()">
+<span class="material-symbols-outlined text-base">content_copy</span>
+<span id="btn-copy-wa-text">Copiar Pedido para WhatsApp</span>
+</button>
+<a class="h-10 px-4 rounded-lg bg-surface-container hover:bg-surface-container-high text-tertiary font-semibold text-xs flex items-center gap-2 transition-colors" href="https://wa.me/5493794771122?text=Hola%20Silvia%20(Papelera%20Central)%20Te%20paso%20el%20pedido%20urgente%20de%20reposicion%20VoltAcc:%2050x%20Rollos%20Papel%20Termico%2080mm%20y%2010x%20Etiquetas%2050x30mm." target="_blank">
+<span class="material-symbols-outlined text-base">send</span>
+<span>Abrir WhatsApp Web Directo</span>
+</a>
+</div>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl space-y-4">
+<div class="flex items-center justify-between">
+<span class="text-xs font-bold uppercase tracking-wider text-on-surface font-label flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-lg">picture_as_pdf</span>
+              Orden de Compra Formal (PDF Gerencial)
+            </span>
+<span class="text-[11px] font-label text-on-surface-variant">Nº OC-2025-089</span>
+</div>
+<p class="text-xs text-on-surface-variant">
+            Genera la orden de aprovisionamiento con firma electrónica gerencial, membrete de VoltAcc Retail POS, condiciones fiscales y cláusula de recepción conforme.
+          </p>
+<div class="p-3 bg-surface-container-lowest rounded-lg flex items-center justify-between text-xs font-label">
+<span class="text-on-surface">Total Estimado Orden:</span>
+<span class="font-bold text-primary text-sm">$443,400.00 ARS</span>
+</div>
+<button class="w-full h-10 rounded-lg bg-primary hover:bg-primary-container text-on-primary font-semibold text-xs flex items-center justify-center gap-2 shadow-sm transition-transform active:scale-95">
+<span class="material-symbols-outlined text-base">download</span>
+<span>Descargar Orden de Compra PDF</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- ========================================================================= -->
+<!-- MODAL: REGISTRAR PAGO A PROVEEDOR (Integración Bifurcada Caja / Tesorería)-->
+<!-- ========================================================================= -->
+<div class="fixed inset-0 z-50 hidden bg-inverse-surface/60 backdrop-blur-sm flex items-center justify-center p-4" id="modal-pago">
+<div class="bg-surface-container-lowest w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+<div class="p-5 bg-surface-container-low flex items-center justify-between border-b border-surface-container">
+<div class="flex items-center gap-2.5">
+<div class="w-9 h-9 rounded-lg bg-primary text-on-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-xl">payments</span>
+</div>
+<div>
+<h3 class="font-headline font-bold text-base text-on-surface">Emitir Pago a Proveedor</h3>
+<p class="text-xs text-on-surface-variant" id="modal-pago-subtitulo">Seleccione canal de egreso financiero</p>
+</div>
+</div>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-container flex items-center justify-center text-on-surface-variant" onclick="closeModal('modal-pago')">
+<span class="material-symbols-outlined text-lg">close</span>
+</button>
+</div>
+<div class="p-6 space-y-4">
+<!-- Info del Proveedor a Pagar -->
+<div class="bg-surface-container-low p-3.5 rounded-xl flex items-center justify-between">
+<div>
+<span class="text-[11px] text-on-surface-variant font-label uppercase">Proveedor Destino</span>
+<h4 class="font-bold text-sm text-on-surface" id="modal-pago-proveedor">Distribuidora Norte S.R.L.</h4>
+</div>
+<div class="text-right">
+<span class="text-[11px] text-on-surface-variant font-label uppercase">Monto a Liquidar</span>
+<div class="font-label text-lg font-bold text-error" id="modal-pago-monto">$680,000 ARS</div>
+</div>
+</div>
+<!-- Selección Bifurcada: Caja POS vs Tesorería -->
+<div class="space-y-2">
+<label class="block text-xs font-semibold uppercase tracking-wider text-on-surface-variant font-label">Origen de los Fondos (Bifurcación Contable)</label>
+<!-- Opción 1: Caja Mostrador -->
+<label class="flex items-start gap-3 p-3.5 rounded-xl bg-surface-container hover:bg-surface-container-high cursor-pointer transition-colors border border-transparent">
+<input checked="" class="mt-1 text-primary focus:ring-primary" name="origen-pago" type="radio" value="caja"/>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<span class="font-bold text-xs text-on-surface">Pagar desde Caja Mostrador (Turno Abierto #04)</span>
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-tertiary-fixed text-on-tertiary-fixed">Efectivo Cajón</span>
+</div>
+<p class="text-[11px] text-on-surface-variant mt-0.5">
+                Genera comprobante de <strong>Egreso de Caja</strong>. Descuenta inmediatamente del efectivo físico del cajón para el arqueo exacto del cajero E. Harrison.
+              </p>
+</div>
+</label>
+<!-- Opción 2: Tesorería / Transferencia -->
+<label class="flex items-start gap-3 p-3.5 rounded-xl bg-surface-container hover:bg-surface-container-high cursor-pointer transition-colors border border-transparent">
+<input class="mt-1 text-primary focus:ring-primary" name="origen-pago" type="radio" value="tesoreria"/>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<span class="font-bold text-xs text-on-surface">Pago por Administración / Tesorería Central</span>
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary-fixed text-on-primary-fixed">Bancos / E-Check</span>
+</div>
+<p class="text-[11px] text-on-surface-variant mt-0.5">
+                Transferencia bancaria o cuenta recaudadora central. <strong>No modifica el efectivo en la caja del cajero.</strong>
+</p>
+</div>
+</label>
+</div>
+<!-- Detalle del Egreso -->
+<div class="grid grid-cols-2 gap-3">
+<div>
+<label class="block text-xs font-semibold text-on-surface-variant font-label mb-1">Monto a Entregar / Transferir</label>
+<input class="w-full h-10 px-3 rounded-lg bg-surface-container-low font-label font-bold text-xs text-on-surface focus:outline-none focus:ring-2 focus:ring-primary" type="text" value="$680,000"/>
+</div>
+<div>
+<label class="block text-xs font-semibold text-on-surface-variant font-label mb-1">Nº Comprobante / Recibo</label>
+<input class="w-full h-10 px-3 rounded-lg bg-surface-container-low font-label text-xs text-on-surface focus:outline-none focus:ring-2 focus:ring-primary" type="text" value="REC-2025-00412"/>
+</div>
+</div>
+<div>
+<label class="block text-xs font-semibold text-on-surface-variant font-label mb-1">Observaciones / Concepto de Egreso</label>
+<input class="w-full h-10 px-3 rounded-lg bg-surface-container-low text-xs text-on-surface focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Ej: Pago total Factura A 0004-00018104 al preventista Hernán" type="text"/>
+</div>
+</div>
+<div class="p-4 bg-surface-container-low flex items-center justify-end gap-2 border-t border-surface-container">
+<button class="h-10 px-4 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface text-xs font-semibold transition-colors" onclick="closeModal('modal-pago')">
+          Cancelar
+        </button>
+<button class="h-10 px-5 rounded-lg bg-primary hover:bg-primary-container text-on-primary text-xs font-semibold flex items-center gap-2 shadow-sm transition-transform active:scale-95" onclick="confirmarPago()">
+<span class="material-symbols-outlined text-base">receipt</span>
+<span>Confirmar e Imprimir Recibo</span>
+</button>
+</div>
+</div>
+</div>
+<!-- ========================================================================= -->
+<!-- MODAL: NUEVO PROVEEDOR (ALTA RÁPIDA ABM)                                  -->
+<!-- ========================================================================= -->
+<div class="fixed inset-0 z-50 hidden bg-inverse-surface/60 backdrop-blur-sm flex items-center justify-center p-4" id="modal-nuevo-proveedor">
+<div class="bg-surface-container-lowest w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+<div class="p-5 bg-surface-container-low flex items-center justify-between border-b border-surface-container">
+<div class="flex items-center gap-2.5">
+<div class="w-9 h-9 rounded-lg bg-primary text-on-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-xl">domain_add</span>
+</div>
+<div>
+<h3 class="font-headline font-bold text-base text-on-surface">Alta de Proveedor Homologado</h3>
+<p class="text-xs text-on-surface-variant">Ficha maestra comercial y vinculación impositiva ARCA</p>
+</div>
+</div>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-container flex items-center justify-center text-on-surface-variant" onclick="closeModal('modal-nuevo-proveedor')">
+<span class="material-symbols-outlined text-lg">close</span>
+</button>
+</div>
+<form class="p-6 space-y-4" onsubmit="guardarNuevoProveedor(event)">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div>
+<label class="block text-xs font-semibold text-on-surface-variant font-label mb-1">Razón Social *</label>
+<input class="w-full h-10 px-3 rounded-lg bg-surface-container-low text-xs text-on-surface focus:ring-2 focus:ring-primary" placeholder="Ej: Distribuidora Sur S.A." required="" type="text"/>
+</div>
+<div>
+<label class="block text-xs font-semibold text-on-surface-variant font-label mb-1">Nombre Comercial / Fantasía</label>
+<input class="w-full h-10 px-3 rounded-lg bg-surface-container-low text-xs text-on-surface focus:ring-2 focus:ring-primary" placeholder="Ej: Sur Tech Mayorista" type="text"/>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div>
+<label class="block text-xs font-semibold text-on-surface-variant font-label mb-1">CUIT *</label>
+<input class="w-full h-10 px-3 rounded-lg bg-surface-container-low font-label text-xs text-on-surface focus:ring-2 focus:ring-primary" placeholder="30-12345678-9" required="" type="text"/>
+</div>
+<div>
+<label class="block text-xs font-semibold text-on-surface-variant font-label mb-1">Condición Fiscal *</label>
+<select class="w-full h-10 px-3 rounded-lg bg-surface-container-low text-xs text-on-surface focus:ring-2 focus:ring-primary">
+<option>Responsable Inscripto (Factura A/M)</option>
+<option>Monotributista (Factura C)</option>
+<option>Exento</option>
+</select>
+</div>
+<div>
+<label class="block text-xs font-semibold text-on-surface-variant font-label mb-1">Rubro Principal</label>
+<select class="w-full h-10 px-3 rounded-lg bg-surface-container-low text-xs text-on-surface focus:ring-2 focus:ring-primary">
+<option>Accesorios Telefonía &amp; Audio</option>
+<option>Insumos Técnicos / Taller</option>
+<option>Papelería &amp; Rollos POS</option>
+<option>Embalajes &amp; Bolsas</option>
+</select>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div>
+<label class="block text-xs font-semibold text-on-surface-variant font-label mb-1">Nombre Preventista / Vendedor</label>
+<input class="w-full h-10 px-3 rounded-lg bg-surface-container-low text-xs text-on-surface focus:ring-2 focus:ring-primary" placeholder="Ej: Carlos Méndez" type="text"/>
+</div>
+<div>
+<label class="block text-xs font-semibold text-on-surface-variant font-label mb-1">WhatsApp Directo</label>
+<input class="w-full h-10 px-3 rounded-lg bg-surface-container-low font-label text-xs text-on-surface focus:ring-2 focus:ring-primary" placeholder="+54 9 379 ..." type="tel"/>
+</div>
+<div>
+<label class="block text-xs font-semibold text-on-surface-variant font-label mb-1">Condición de Pago Habitual</label>
+<select class="w-full h-10 px-3 rounded-lg bg-surface-container-low text-xs text-on-surface focus:ring-2 focus:ring-primary">
+<option>Cta. Cte. 15 Días</option>
+<option>Cta. Cte. 30 Días</option>
+<option>Contado Efectivo</option>
+<option>Transferencia Inmediata</option>
+</select>
+</div>
+</div>
+<div class="p-3 bg-surface-container-low rounded-xl flex items-center justify-between text-xs">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary text-base">verified_user</span>
+<span class="text-on-surface">Validar automáticamente constancia CUIT contra web service fiscal ARCA</span>
+</div>
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-tertiary-fixed text-on-tertiary-fixed">Activo</span>
+</div>
+<div class="p-4 bg-surface-container-low -mx-6 -mb-6 mt-4 flex items-center justify-end gap-2 border-t border-surface-container">
+<button class="h-10 px-4 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface text-xs font-semibold transition-colors" onclick="closeModal('modal-nuevo-proveedor')" type="button">
+            Cancelar
+          </button>
+<button class="h-10 px-5 rounded-lg bg-primary hover:bg-primary-container text-on-primary text-xs font-semibold flex items-center gap-2 shadow-sm transition-transform active:scale-95" type="submit">
+<span class="material-symbols-outlined text-base">save</span>
+<span>Guardar Proveedor</span>
+</button>
+</div>
+</form>
+</div>
+</div>
+<!-- ========================================================================= -->
+<!-- MICRO-INTERACCIONES JAVASCRIPT INLINE                                    -->
+<!-- ========================================================================= -->
+<script>
+    // Tab switching
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.add('hidden');
+        content.classList.remove('block');
+      });
+      const selected = document.getElementById(tabId);
+      if (selected) {
+        selected.classList.remove('hidden');
+        selected.classList.add('block');
+      }
+
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-surface-container-lowest', 'text-primary', 'shadow-sm', 'font-semibold');
+        btn.classList.add('text-on-surface-variant', 'font-medium');
+      });
+
+      const activeBtn = document.getElementById('btn-' + tabId);
+      if (activeBtn) {
+        activeBtn.classList.add('bg-surface-container-lowest', 'text-primary', 'shadow-sm', 'font-semibold');
+        activeBtn.classList.remove('text-on-surface-variant', 'font-medium');
+      }
+    }
+
+    // Toggle expandible detail rows
+    function toggleDetail(detailId) {
+      const row = document.getElementById(detailId);
+      if (row) {
+        row.classList.toggle('hidden');
+      }
+    }
+
+    // Modals
+    function openModal(modalId) {
+      const m = document.getElementById(modalId);
+      if (m) m.classList.remove('hidden');
+    }
+
+    function closeModal(modalId) {
+      const m = document.getElementById(modalId);
+      if (m) m.classList.add('hidden');
+    }
+
+    // Pago modal with dynamic data
+    function openPagoModal(proveedor, saldo) {
+      document.getElementById('modal-pago-proveedor').textContent = proveedor;
+      document.getElementById('modal-pago-monto').textContent = saldo;
+      openModal('modal-pago');
+    }
+
+    function confirmarPago() {
+      alert('Pago registrado correctamente. Se emitió comprobante de Egreso de Caja para rendición de turno.');
+      closeModal('modal-pago');
+    }
+
+    function guardarNuevoProveedor(e) {
+      e.preventDefault();
+      alert('Proveedor homologado y dado de alta exitosamente en la base de datos central.');
+      closeModal('modal-nuevo-proveedor');
+    }
+
+    // Copy WhatsApp order message
+    function copyWhatsappMsg() {
+      const msg = `Hola Silvia (Papelera Central) 👋 Te paso el pedido urgente de reposición para el local VoltAcc Downtown:\n\n📦 50x Rollos Papel Térmico 80mm x 50m (Cod: PAP-ROL-80MM)\n📦 10x Etiquetas Autoadhesivas 50x30mm (Cod: PAP-ETIQ-5030)\n\n📍 Entrega: Local Central Metropolitan (Caja POS 04)\n🧾 Factura A a CUIT 30-71449812-4\n¡Avisame cuando despachan! Gracias.`;
+      navigator.clipboard.writeText(msg).then(() => {
+        const textSpan = document.getElementById('btn-copy-wa-text');
+        const btn = document.getElementById('btn-copy-wa');
+        if (textSpan && btn) {
+          textSpan.textContent = '¡Copiado al Portapapeles!';
+          btn.classList.add('bg-tertiary-container');
+          setTimeout(() => {
+            textSpan.textContent = 'Copiar Pedido para WhatsApp';
+            btn.classList.remove('bg-tertiary-container');
+          }, 2500);
+        }
+      });
+    }
+
+    // Filter in Alertas
+    function filterAlertaProveedor(val) {
+      // micro-demo reactive feedback
+      console.log('Filtrado de alerta por proveedor: ' + val);
+    }
+  </script>
+</div></main>
+<!-- FOOTER OPERATIONAL STATUS BAR -->
+<footer class="bg-surface-container-low border-t border-outline-variant/30 px-6 py-3 flex items-center justify-between text-xs text-on-surface-variant">
+<div class="flex items-center gap-4">
+<span class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="">ARCA Servidor Fiscal 1: Respond Computado (24ms)</span>
+</span>
+<span class="hidden md:inline text-outline-variant">•</span>
+<span class="hidden md:inline">Base de Datos: Postgres Sync Replicada</span>
+</div>
+<div class="flex items-center gap-3 font-label text-[11px]">
+<span class="">Kinetic POS v4.12.8-rel</span>
+<span class="">IP: 192.168.1.104</span>
+</div>
+</footer>
+</div>
+</body></html>

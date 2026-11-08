@@ -38,6 +38,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   const { shift } = useCashShift();
   const { user, logout } = useAuth();
   const isAdmin = user?.role === 'admin';
+  const isManager = user?.role === 'manager';
 
   return (
     <header
@@ -81,6 +82,27 @@ export const TopBar: React.FC<TopBarProps> = ({
             </div>
             <span className="text-[10px] bg-[#006194] text-white px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider hidden md:inline-block">
               Super Admin
+            </span>
+            <div className="hidden md:flex items-center gap-1.5 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="font-mono text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
+                En Línea
+              </span>
+            </div>
+          </div>
+        ) : isManager ? (
+          <div className="hidden sm:flex items-center gap-2.5">
+            <div className="flex items-center gap-2">
+              <span className="font-headline font-bold text-base text-[#131b2e] dark:text-white">
+                VoltAcc Retail POS
+              </span>
+              <span className="text-[#dae2fd] dark:text-[#283044]">•</span>
+              <span className="text-xs font-semibold text-[#006194] dark:text-[#93ccff] bg-[#eaedff] dark:bg-[#1e293b] px-2 py-0.5 rounded-md">
+                Portal Gerencial • Control Comercial
+              </span>
+            </div>
+            <span className="text-[10px] bg-[#007bb9] text-white px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider hidden md:inline-block">
+              Gerente
             </span>
             <div className="hidden md:flex items-center gap-1.5 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
@@ -175,7 +197,7 @@ export const TopBar: React.FC<TopBarProps> = ({
               {user?.displayName || (isAdmin ? 'Admin Root' : shift.operator)}
             </span>
             <span className="font-mono-num text-[11px] text-[#3f4850] dark:text-slate-400 leading-tight">
-              {isAdmin ? 'Super Admin' : user?.role === 'seller' ? 'Vendedor' : 'Operador'}
+              {isAdmin ? 'Super Admin' : isManager ? 'Gerente' : user?.role === 'seller' ? 'Vendedor' : 'Operador'}
             </span>
           </div>
           <div className="w-8 h-8 rounded-full bg-[#006194] dark:bg-[#007bb9] flex items-center justify-center text-white shadow-xs font-bold text-xs">

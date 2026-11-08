@@ -23,6 +23,9 @@ import { LoginView } from './components/LoginView';
 import { AdminUserManagementView } from './components/AdminUserManagementView';
 import { AdminHomeDashboardView } from './components/AdminHomeDashboardView';
 import { AdminBackupRecoveryView } from './components/AdminBackupRecoveryView';
+import { CommercialControlDashboardView } from './components/CommercialControlDashboardView';
+import { SalesReportBIView } from './components/SalesReportBIView';
+import { SuppliersSuppliesManagementView } from './components/SuppliersSuppliesManagementView';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { useProducts, useCart } from './services/posStore';
 
@@ -35,6 +38,14 @@ const queryClient = new QueryClient({
 });
 
 const ADMIN_TABS: NavigationTab[] = ['admin/home', 'admin/users', 'admin/backup'];
+const MANAGER_TABS: NavigationTab[] = [
+  'manager/home',
+  'manager/sales-bi',
+  'manager/suppliers',
+  'admin/users',
+  'catalog',
+  'pos',
+];
 const SELLER_TABS: NavigationTab[] = ['home', 'pos', 'catalog', 'drawer', 'history', 'seller/home'];
 
 function POSApp() {
@@ -42,7 +53,7 @@ function POSApp() {
 
   const [currentTab, setCurrentTab] = useState<NavigationTab>(() => {
     const hash = window.location.hash.replace('#', '') as NavigationTab;
-    const allValid: NavigationTab[] = [...ADMIN_TABS, ...SELLER_TABS, 'login'];
+    const allValid: NavigationTab[] = [...ADMIN_TABS, ...MANAGER_TABS, ...SELLER_TABS, 'login'];
     return allValid.includes(hash) ? hash : 'login';
   });
 
@@ -102,7 +113,18 @@ function POSApp() {
         return;
       }
 
-      // Role isolation: Seller / Non-admin
+      // Role isolation: Manager
+      if (user.role === 'manager') {
+        if (!MANAGER_TABS.includes(rawHash as NavigationTab)) {
+          window.location.hash = 'manager/home';
+          setCurrentTab('manager/home');
+        } else {
+          setCurrentTab(rawHash as NavigationTab);
+        }
+        return;
+      }
+
+      // Role isolation: Seller / Non-admin / Non-manager
       if (rawHash === 'login' || !rawHash || rawHash === '/' || !SELLER_TABS.includes(rawHash as NavigationTab)) {
         window.location.hash = 'seller/home';
         setCurrentTab('seller/home');
@@ -244,8 +266,24 @@ function POSApp() {
             </>
           )}
 
+          {/* Manager Views */}
+          {user?.role === 'manager' && (
+            <>
+              {currentTab === 'manager/home' && <CommercialControlDashboardView />}
+              {currentTab === 'manager/sales-bi' && <SalesReportBIView />}
+              {currentTab === 'manager/suppliers' && <SuppliersSuppliesManagementView />}
+              {currentTab === 'admin/users' && <AdminUserManagementView />}
+              {currentTab === 'catalog' && (
+                <CatalogStockView onNavigateToPOS={() => handleNavigate('pos')} />
+              )}
+              {currentTab === 'pos' && (
+                <POSTerminalView onOpenReceipt={(ticket) => setActiveReceiptTicket(ticket)} />
+              )}
+            </>
+          )}
+
           {/* POS & Seller Views */}
-          {user?.role !== 'admin' && (
+          {user?.role !== 'admin' && user?.role !== 'manager' && (
             <>
               {(currentTab === 'home' || currentTab === 'seller/home') && (
                 <HomeDashboardView onNavigate={handleNavigate} />
@@ -271,8 +309,8 @@ function POSApp() {
           )}
         </main>
 
-        {/* Mobile Bottom Navigation Bar (Seller / POS only) */}
-        {user?.role !== 'admin' && (
+        {/* Mobile Bottom Navigation Bar (Seller / Cashier only) */}
+        {user?.role !== 'admin' && user?.role !== 'manager' && (
           <nav className="fixed bottom-0 left-0 right-0 h-16 bg-[#faf8ff]/95 dark:bg-[#131b2e]/95 backdrop-blur-xl border-t border-[#dae2fd]/60 dark:border-[#283044] z-40 flex items-center justify-around px-2 lg:hidden shadow-lg">
             {[
               { id: 'home' as NavigationTab, label: 'Home', icon: Home },

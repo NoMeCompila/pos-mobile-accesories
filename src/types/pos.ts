@@ -8,7 +8,10 @@ export type NavigationTab =
   | 'seller/home'
   | 'admin/home'
   | 'admin/users'
-  | 'admin/backup';
+  | 'admin/backup'
+  | 'manager/home'
+  | 'manager/sales-bi'
+  | 'manager/suppliers';
 
 export type PaymentMethod = 'cash' | 'card' | 'bizum' | 'split';
 
