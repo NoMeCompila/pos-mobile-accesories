@@ -30,7 +30,8 @@ rules:
     - "Frame requirements around practical POS retail and repair shop user journeys (cashier checkout, repair intake, ticket issuance, cash drawer shifts)."
     - "Define Gherkin Given/When/Then scenarios structured so they can be easily executed and verified manually in the UI."
   tasks:
-    - "STRICT: Never include automated testing tasks (no unit, integration, or e2e test authoring)."
+    - "STRICT: Never include automated testing tasks (integration, or e2e test authoring)."
+    - "Unit testing: only include in critical part of the system like: Login, Sells, DB migrations and Ticket Printing."
     - "Every task must include concise manual verification steps for the developer (e.g. check UI behavior, inspect Network tab, verify Supabase row updates)."
     - "Break implementation into small, incremental tasks of maximum 1 to 2 hours of effort."
     - "Organize tasks logically: 1) Database schema/types -> 2) Services/API hooks -> 3) UI views/components -> 4) Manual verification."
