@@ -12,7 +12,6 @@ import {
   BarChart3,
   UserCog,
   RotateCcw,
-  Sliders,
 } from 'lucide-react';
 import { NavigationTab } from '../types/pos';
 import { UserRole } from '../types/auth';
@@ -31,7 +30,6 @@ export const NAV_ITEMS: NavigationItem[] = [
   { id: 'admin/home', label: 'Resumen y Logs', icon: BarChart3, roles: ['admin'] },
   { id: 'admin/users', label: 'Gestión de Usuarios', icon: UserCog, roles: ['admin'] },
   { id: 'admin/backup', label: 'Backup & Recovery', icon: RotateCcw, roles: ['admin'] },
-  { id: 'admin/config', label: 'Configuración', icon: Sliders, roles: ['admin'] },
   // POS & Seller routes
   {
     id: 'home',

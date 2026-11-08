@@ -23,7 +23,7 @@ The system SHALL dynamically filter and display only the navigation routes autho
 
 #### Scenario: Filtering navigation links for administrator role
 - **WHEN** the authenticated user has role `admin`
-- **THEN** the sidebar displays administrative links (`Resumen y Logs` -> `#admin/home`, `Gestión de Usuarios` -> `#admin/users`, `Backup & Recovery` -> `#admin/backup`, and `Configuración` -> `#admin/config`)
+- **THEN** the sidebar displays administrative links (`Resumen y Logs` -> `#admin/home`, `Gestión de Usuarios` -> `#admin/users`, and `Backup & Recovery` -> `#admin/backup`)
 - **AND** hides cashier-only POS checkout routes (`#pos`, `#drawer`, `#history`)
 
 #### Scenario: Filtering navigation links for cashier or seller role
