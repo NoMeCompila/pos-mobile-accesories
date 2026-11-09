@@ -31,6 +31,11 @@ The system SHALL dynamically filter and display only the navigation routes autho
 - **THEN** the sidebar displays POS operational links (`Home` -> `#seller/home`, `Terminal de Venta` -> `#pos`, `Catálogo y Stock` -> `#catalog`, `Apertura/cierre de Caja` -> `#drawer`, and `Historial de Mis Ventas` -> `#history`)
 - **AND** hides administrative routes (`#admin/*`)
 
+#### Scenario: Filtering navigation links for manager role
+- **WHEN** the authenticated user has role `manager`
+- **THEN** the sidebar displays managerial and operational links (`Control Comercial` -> `#manager/home`, `Reportes BI` -> `#manager/sales-bi`, `Proveedores e Insumos` -> `#manager/suppliers`, `Gestión de Personal` -> `#admin/users`, `Catálogo y Stock` -> `#catalog`, and `Terminal de Venta` -> `#pos`)
+- **AND** hides root system disaster recovery routes (`#admin/backup`)
+
 ### Requirement: VoltAcc Kinetic Visual Identity Preservation
 The system SHALL maintain the VoltAcc Kinetic visual design across all user roles, including the brand header lockup, corporate blue active states (`#007bb9`), and the bottom terminal telemetry and theme control card.
 
